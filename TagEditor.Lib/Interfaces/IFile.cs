@@ -13,6 +13,8 @@ namespace TagEditor.Lib.Interfaces
 
         Task<byte[]> ReadAsync(int firstNBytes, int offset);
 
+        Task<byte[]> ReadNextAsync(int nBytes);
+
         void Remove(int lastNBytes);
 
     }

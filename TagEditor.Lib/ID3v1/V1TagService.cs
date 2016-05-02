@@ -19,7 +19,7 @@ namespace TagEditor.Lib.ID3v1
             : base(file)
         {   }
 
-        public override async Task<bool> ValidFormatAsync()
+        public override async Task<bool> ParseHeaderAsync()
         {
             await LoadData();
 
@@ -35,7 +35,7 @@ namespace TagEditor.Lib.ID3v1
 
         public override async Task<ITagInformation> ParseAsync()
         {
-            if(!await ValidFormatAsync())
+            if(!await ParseHeaderAsync())
                 throw new InvalidOperationException("File doesn't have valid ID3v1 tag presented");
 
             var info = new TagInformation();
@@ -81,7 +81,7 @@ namespace TagEditor.Lib.ID3v1
 
             var offset = 0;
             // Overwrite existing tags if exists
-            if (await ValidFormatAsync())
+            if (await ParseHeaderAsync())
                 offset = -buffer.Length;
 
             await File.WriteAsync(buffer, offset, true);
@@ -89,7 +89,7 @@ namespace TagEditor.Lib.ID3v1
 
         public override async Task RemoveTags()
         {
-            if (!await ValidFormatAsync())
+            if (!await ParseHeaderAsync())
                 throw new InvalidOperationException("File doesn't have valid ID3v1 tag presented");
 
             File.Remove(size);

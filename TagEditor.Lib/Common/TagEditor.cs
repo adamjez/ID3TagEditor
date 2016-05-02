@@ -11,7 +11,7 @@ namespace TagEditor.Lib.Common
         {
             var service = TagServiceBuilder.ResolveService(file, type);
 
-            if (!await service.ValidFormatAsync())
+            if (!await service.ParseHeaderAsync())
             {
                 throw new ArgumentException("File is in invalid format", nameof(file));
             }

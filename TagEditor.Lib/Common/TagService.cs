@@ -15,7 +15,7 @@ namespace TagEditor.Lib.Common
             File = file;
         }
 
-        public abstract Task<bool> ValidFormatAsync();
+        public abstract Task<bool> ParseHeaderAsync();
         public abstract Task<ITagInformation> ParseAsync();
         public abstract Task SaveAsync(ITagInformation tags);
         public abstract Task RemoveTags();

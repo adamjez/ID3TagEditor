@@ -7,69 +7,81 @@ namespace TagEditor.Lib.Common
 {
     public class AudioFile : IFile, IDisposable
     {
-        private FileStream _fileStream;
+        private FileStream fileStream;
 
         public void Open(string path, bool readOnly = true)
         {
             var accessLevel = readOnly ? FileAccess.Read : FileAccess.ReadWrite;
-            _fileStream = File.Open(path, FileMode.Open, accessLevel);
+            fileStream = File.Open(path, FileMode.Open, accessLevel);
         }
 
         public async Task WriteAsync(byte[] content, int offset, bool reverseDirection = false)
         {
-            if(!_fileStream.CanWrite)
+            if(!fileStream.CanWrite)
                 throw new InvalidOperationException("Cannot write into file opened for only reading");
 
             if (reverseDirection)
-                offset = (int) (_fileStream.Length - offset);
-
-            _fileStream.Seek(offset, SeekOrigin.Begin);
-            await _fileStream.WriteAsync(content, 0, content.Length);
+                offset = (int) (fileStream.Length - offset);
+            
+            fileStream.Seek(offset, SeekOrigin.Begin);
+            await fileStream.WriteAsync(content, 0, content.Length);
         }
 
         public async Task<byte[]> ReadAsync(int lastNBytes)
         {
-            if (_fileStream.Length < lastNBytes)
+            if (fileStream.Length < lastNBytes)
                 throw new ArgumentOutOfRangeException(nameof(lastNBytes));
 
             var content = new byte[lastNBytes];
 
-            var offset = (int)(_fileStream.Length - lastNBytes);
+            var offset = (int)(fileStream.Length - lastNBytes);
 
-            _fileStream.Seek(offset, SeekOrigin.Begin);
-            await _fileStream.ReadAsync(content, 0, lastNBytes);
+            fileStream.Seek(offset, SeekOrigin.Begin);
+            await fileStream.ReadAsync(content, 0, lastNBytes);
 
             return content;
         }
 
         public async Task<byte[]> ReadAsync(int firstNBytes, int offset)
         {
-            if (_fileStream.Length < firstNBytes)
+            if (fileStream.Length < firstNBytes)
                 throw new ArgumentOutOfRangeException(nameof(firstNBytes));
 
             var content = new byte[firstNBytes];
 
-            _fileStream.Seek(offset, SeekOrigin.Begin);
-            await _fileStream.ReadAsync(content, 0, firstNBytes);
+            fileStream.Seek(offset, SeekOrigin.Begin);
+            await fileStream.ReadAsync(content, 0, firstNBytes);
+
+            return content;
+        }
+
+        public async Task<byte[]> ReadNextAsync(int nBytes)
+        {
+            if (fileStream.Length < nBytes + fileStream.Position)
+                throw new ArgumentOutOfRangeException(nameof(nBytes));
+
+            var content = new byte[nBytes];
+
+            await fileStream.ReadAsync(content, 0, nBytes);
 
             return content;
         }
 
         public void Remove(int lastNBytes)
         {
-            if (_fileStream.Length < lastNBytes)
+            if (fileStream.Length < lastNBytes)
                 throw new ArgumentOutOfRangeException(nameof(lastNBytes));
 
-            _fileStream.SetLength(_fileStream.Length - lastNBytes);
+            fileStream.SetLength(fileStream.Length - lastNBytes);
         }
 
         public void Dispose()
         {
-            if (_fileStream != null)
+            if (fileStream != null)
             {
-                _fileStream.Dispose();
-                _fileStream.Close();
-                _fileStream = null;
+                fileStream.Dispose();
+                fileStream.Close();
+                fileStream = null;
             }
         }
     }

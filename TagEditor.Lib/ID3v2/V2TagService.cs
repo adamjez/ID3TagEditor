@@ -1,34 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TagEditor.Lib.Common;
 using TagEditor.Lib.ID3v1;
 using TagEditor.Lib.Interfaces;
+using TagEditor.Lib.Utility;
 
 namespace TagEditor.Lib.ID3v2
 {
     class V2TagService : TagService
     {
-        private const string tag = "ID3";
+        private const int supportedMajorVersion = 3;
 
-        public V2TagService(IFile file) 
+        private Header header;
+        private ExtendedHeader extendedHeader;
+
+        private int currentPosition = 0;
+        public V2TagService(IFile file)
             : base(file)
         {
         }
 
-        public override async Task<bool> ValidFormatAsync()
+        /// <summary>
+        /// Source http://id3.org/id3v2.3.0#ID3v2_header
+        /// </summary>
+        /// <returns>Returns True if library can parse ID3v2 tag in file</returns>
+        public override async Task<bool> ParseHeaderAsync()
         {
             var tagBytes = await File.ReadAsync(10, 0);
 
-            var tagString = Encoding.ASCII.GetString(tagBytes.Take(3).ToArray());
+            header = await Header.Parse(tagBytes);
 
-            return tagString == tag;
+            return header != null && header.MajorVersion == supportedMajorVersion;
         }
 
-        public override Task<ITagInformation> ParseAsync()
+        public override async Task<ITagInformation> ParseAsync()
         {
+            if (header == null && !await ParseHeaderAsync())
+                throw new InvalidOperationException("File doesn't have valid ID3v2 tag presented");
+
+            Debug.Assert(header != null, "Header != null");
+
+            // Parse extended header if exists
+            if (FlagsHelper.IsSet(header.Flags, HeaderFlags.Extended))
+            {
+                var extendedBytes = await File.ReadNextAsync(10);
+
+                extendedHeader = await ExtendedHeader.Parse(extendedBytes);
+
+                // TODO: do something with extended header content
+                await File.ReadNextAsync(extendedHeader.Size);
+                currentPosition = 10 + extendedHeader.Size;
+            }
+
+
+
             throw new NotImplementedException();
         }
 
@@ -40,6 +70,15 @@ namespace TagEditor.Lib.ID3v2
         public override Task RemoveTags()
         {
             throw new NotImplementedException();
+        }
+
+        private async Task ParseFrame()
+        {
+            // 10 bytes size of frame header
+            if (currentPosition + 10 < header.Size)
+            {
+
+            }
         }
     }
 }

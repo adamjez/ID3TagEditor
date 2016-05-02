@@ -13,7 +13,7 @@ namespace TagEditor.Tests
         {
             using (var file = new AudioFile())
             {
-                file.Open("AudioFiles/test.mp3");
+                file.Open("AudioFiles/test1.mp3");
 
                 var editor = new Lib.Common.TagEditor();
 

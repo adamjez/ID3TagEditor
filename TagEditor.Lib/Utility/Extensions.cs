@@ -42,5 +42,12 @@ namespace TagEditor.Lib.Utility
 
             return result;
         }
+
+        public static async Task<byte> ReadByteAsync(this Stream stream)
+        {
+            var result = await ReadBytesAsync(stream, 1);
+
+            return result[0];
+        }
     }
 }

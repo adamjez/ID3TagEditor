@@ -41,6 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AudioFile.cs" />
+    <Compile Include="ID3v2\ExtendedHeader.cs" />
+    <Compile Include="ID3v2\ExtendedHeaderFlags.cs" />
+    <Compile Include="ID3v2\Frame.cs" />
+    <Compile Include="ID3v2\FrameHeader.cs" />
+    <Compile Include="ID3v2\FrameHeaderFlags1.cs" />
+    <Compile Include="ID3v2\FrameHeaderFlags2.cs" />
+    <Compile Include="ID3v2\HeaderFlags.cs" />
     <Compile Include="Common\TagType.cs" />
     <Compile Include="ID3v1\Genre.cs" />
     <Compile Include="ID3v1\GenreTag.cs" />
@@ -54,6 +61,8 @@
     <Compile Include="Common\TagServiceBuilder.cs" />
     <Compile Include="ID3v1\V1TagService.cs" />
     <Compile Include="ID3v1\StringNumberTag.cs" />
+    <Compile Include="ID3v2\Header.cs" />
+    <Compile Include="ID3v2\HelperMethods.cs" />
     <Compile Include="ID3v2\V2TagService.cs" />
     <Compile Include="Interfaces\IFile.cs" />
     <Compile Include="Interfaces\ITag.cs" />
@@ -62,6 +71,7 @@
     <Compile Include="Interfaces\ITagValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Extensions.cs" />
+    <Compile Include="Utility\FalgsHelper.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

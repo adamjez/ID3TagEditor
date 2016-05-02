@@ -9,7 +9,7 @@ namespace TagEditor.Lib.Interfaces
 {
     public interface ITagService
     {
-        Task<bool> ValidFormatAsync();
+        Task<bool> ParseHeaderAsync();
 
         Task<ITagInformation> ParseAsync();
 
