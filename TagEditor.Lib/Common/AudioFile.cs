@@ -55,14 +55,14 @@ namespace TagEditor.Lib.Common
             return content;
         }
 
-        public async Task<byte[]> ReadNextAsync(int nBytes)
+        public async Task<byte[]> ReadNextAsync(uint nBytes)
         {
             if (fileStream.Length < nBytes + fileStream.Position)
                 throw new ArgumentOutOfRangeException(nameof(nBytes));
 
             var content = new byte[nBytes];
 
-            await fileStream.ReadAsync(content, 0, nBytes);
+            await fileStream.ReadAsync(content, 0, (int)nBytes);
 
             return content;
         }

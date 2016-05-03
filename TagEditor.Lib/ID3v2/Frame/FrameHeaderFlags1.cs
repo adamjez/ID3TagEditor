@@ -1,6 +1,6 @@
 using System;
 
-namespace TagEditor.Lib.ID3v2
+namespace TagEditor.Lib.ID3v2.Frame
 {
     [Flags]
     internal enum FrameHeaderFlags1

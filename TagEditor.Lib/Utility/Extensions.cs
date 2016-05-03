@@ -20,7 +20,7 @@ namespace TagEditor.Lib.Utility
             foreach (byte number in content)
             {
                 result <<= 8;
-                result += number;
+                result |= number;
             }
             return result;
         }
@@ -48,6 +48,18 @@ namespace TagEditor.Lib.Utility
             var result = await ReadBytesAsync(stream, 1);
 
             return result[0];
+        }
+
+        public static T[] SubArray<T>(this T[] data, int index, int length)
+        {
+            T[] result = new T[length];
+            Array.Copy(data, index, result, 0, length);
+            return result;
+        }
+
+        public static T ToEnum<T>(this string value)
+        {
+            return (T)Enum.Parse(typeof(T), value, true);
         }
     }
 }

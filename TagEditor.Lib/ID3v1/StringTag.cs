@@ -5,13 +5,21 @@ namespace TagEditor.Lib.ID3v1
     public class StringBasicTag : BasicTag<string>
     {
         private readonly int _maxLength;
+        private readonly bool isNotLimited;
 
-        public StringBasicTag(int maxLength)
+        public StringBasicTag(int maxLength = -1)
             : base(maxLength)
         {
             Content = string.Empty;
 
-            _maxLength = maxLength;
+            if (maxLength > 0)
+            {
+                _maxLength = maxLength;
+            }
+            else
+            {
+                isNotLimited = true;
+            }
         }
 
         public override void Parse(byte[] content)
@@ -21,7 +29,7 @@ namespace TagEditor.Lib.ID3v1
 
         public override bool Validate(string val)
         {
-            return val.Length <= _maxLength;
+            return isNotLimited || val.Length <= _maxLength;
         }
     }
 }

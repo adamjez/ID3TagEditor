@@ -1,18 +1,22 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using TagEditor.Lib.ID3v2.Frame.Types;
 using TagEditor.Lib.Interfaces;
 using TagEditor.Lib.Utility;
 
-namespace TagEditor.Lib.ID3v2
+namespace TagEditor.Lib.ID3v2.Frame
 {
     internal class Frame
     {
         public FrameHeader Header { get; set; }
 
+        public BaseFrame Base { get; set; }
         public static async Task<Frame> Parse(IFile file)
         {
-            var frame = new Frame();
-            frame.Header = await FrameHeader.Parse(await file.ReadNextAsync(10));
+            var frame = new Frame
+            {
+                Header = await FrameHeader.Parse(await file.ReadNextAsync(10))
+            };
 
             if (FlagsHelper.IsSet(frame.Header.Flags2, FrameHeaderFlags2.Compression))
             {
@@ -35,8 +39,10 @@ namespace TagEditor.Lib.ID3v2
                 Debug.WriteLine("Frame header flag is set (FrameHeaderFlags2.GroupingIdentity)");
             }
 
+            frame.Base = FrameResolver.Resolve(frame.Header.FrameID.ToEnum<FrameType>());
+            frame.Base.Parse(await file.ReadNextAsync(frame.Header.Size));
 
-            return null;
+            return frame;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TagEditor.Lib.Common;
 using TagEditor.Lib.ID3v1;
+using TagEditor.Lib.ID3v2.Frame;
 using TagEditor.Lib.Interfaces;
 using TagEditor.Lib.Utility;
 
@@ -19,7 +20,7 @@ namespace TagEditor.Lib.ID3v2
         private Header header;
         private ExtendedHeader extendedHeader;
 
-        private int currentPosition = 0;
+        private uint currentPosition = 0;
         public V2TagService(IFile file)
             : base(file)
         {
@@ -57,9 +58,24 @@ namespace TagEditor.Lib.ID3v2
                 currentPosition = 10 + extendedHeader.Size;
             }
 
+            var information = new TagInformationV2();
+            while (currentPosition + 10 < header.Size)
+            {
+                try
+                {
+                    var frame = await Frame.Frame.Parse(File);
+                    currentPosition += frame.Header.FullSize;
 
+                    FrameToTagInformation.Fill(frame.Base, information);
+                }
+                catch (EndOfFramesException)
+                {
+                    break;
+                }
 
-            throw new NotImplementedException();
+            }
+
+            return information;
         }
 
         public override Task SaveAsync(ITagInformation tags)
@@ -70,15 +86,6 @@ namespace TagEditor.Lib.ID3v2
         public override Task RemoveTags()
         {
             throw new NotImplementedException();
-        }
-
-        private async Task ParseFrame()
-        {
-            // 10 bytes size of frame header
-            if (currentPosition + 10 < header.Size)
-            {
-
-            }
         }
     }
 }

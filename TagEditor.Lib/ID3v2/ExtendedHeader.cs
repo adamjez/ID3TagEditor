@@ -6,11 +6,11 @@ namespace TagEditor.Lib.ID3v2
 {
     internal class ExtendedHeader
     {
-        public int Size { get; set; }
+        public uint Size { get; set; }
 
         public ExtendedHeaderFlags Flags { get; set; }
 
-        public int PaddingSize { get; set; }
+        public uint PaddingSize { get; set; }
 
         public static async Task<ExtendedHeader> Parse(byte[] bytes)
         {
@@ -18,9 +18,9 @@ namespace TagEditor.Lib.ID3v2
             {
                 return new ExtendedHeader
                 {
-                    Size = HelperMethods.ParseSize(await ms.ReadBytesAsync(4)),
+                    Size = HelperMethods.ParseSynchSize(await ms.ReadBytesAsync(4)),
                     Flags = (ExtendedHeaderFlags) (await ms.ReadBytesAsync(2))[0],
-                    PaddingSize = HelperMethods.ParseSize(await ms.ReadBytesAsync(4))
+                    PaddingSize = HelperMethods.ParseSynchSize(await ms.ReadBytesAsync(4))
                 };
             }
         }

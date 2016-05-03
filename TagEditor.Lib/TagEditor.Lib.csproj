@@ -41,12 +41,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AudioFile.cs" />
+    <Compile Include="ID3v1\TagInformationV2.cs" />
     <Compile Include="ID3v2\ExtendedHeader.cs" />
     <Compile Include="ID3v2\ExtendedHeaderFlags.cs" />
-    <Compile Include="ID3v2\Frame.cs" />
-    <Compile Include="ID3v2\FrameHeader.cs" />
-    <Compile Include="ID3v2\FrameHeaderFlags1.cs" />
-    <Compile Include="ID3v2\FrameHeaderFlags2.cs" />
+    <Compile Include="ID3v2\FrameToTagInformation.cs" />
+    <Compile Include="ID3v2\Frame\EndOfFramesException.cs" />
+    <Compile Include="ID3v2\Frame\Frame.cs" />
+    <Compile Include="ID3v2\Frame\FrameHeader.cs" />
+    <Compile Include="ID3v2\Frame\FrameHeaderFlags1.cs" />
+    <Compile Include="ID3v2\Frame\FrameHeaderFlags2.cs" />
+    <Compile Include="ID3v2\Frame\FrameResolver.cs" />
+    <Compile Include="ID3v2\Frame\Types\BaseFrame.cs" />
+    <Compile Include="ID3v2\Frame\Types\CommentFrame.cs" />
+    <Compile Include="ID3v2\Frame\Types\FrameType.cs" />
+    <Compile Include="ID3v2\Frame\Types\GenreFrame.cs" />
+    <Compile Include="ID3v2\Frame\Types\TextFrame.cs" />
     <Compile Include="ID3v2\HeaderFlags.cs" />
     <Compile Include="Common\TagType.cs" />
     <Compile Include="ID3v1\Genre.cs" />

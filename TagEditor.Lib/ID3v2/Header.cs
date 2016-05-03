@@ -12,7 +12,7 @@ namespace TagEditor.Lib.ID3v2
 
         public int MajorVersion { get; set; }
         public int RevisionVersion { get; set; }
-        public int Size { get; set; }
+        public uint Size { get; set; }
         public HeaderFlags Flags { get; set; }
 
         public static async Task<Header> Parse(byte[] bytes)
@@ -42,8 +42,7 @@ namespace TagEditor.Lib.ID3v2
                     return null;
                 }
                 header.Flags = (HeaderFlags)flagNumber;
-
-                header.Size = 4 * HelperMethods.ParseSize(await ms.ReadBytesAsync(4));
+                header.Size = HelperMethods.ParseSynchSize(await ms.ReadBytesAsync(4));
 
                 return header;
             }

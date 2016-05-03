@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace TagEditor.Lib.ID3v1
 {
@@ -9,6 +10,13 @@ namespace TagEditor.Lib.ID3v1
             return type == Type.None 
                 ? type.ToString()
                 : typeStrings.ElementAt((int) type);
+        }
+
+        public static Type FromString(string value)
+        {
+            var id = Array.IndexOf(typeStrings, value);
+
+            return id != -1 ? (Type) id : Type.None;
         }
 
         public enum Type
