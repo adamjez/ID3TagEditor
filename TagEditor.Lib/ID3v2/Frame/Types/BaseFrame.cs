@@ -5,6 +5,7 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
 {
     internal abstract class BaseFrame
     {
+        private const string baseCoding = "iso-8859-1";
         public FrameType Type { get; private set; }
 
         protected BaseFrame(FrameType type)
@@ -16,13 +17,13 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
 
         public abstract byte[] Render();
 
-        protected Encoding GetEncoding(byte encoding = 0)
+        protected Encoding GetEncoding(byte encoding = 1)
         {
             Encoding encoder = null;
             if (encoding == 0)
             {
                 // ISO-8859-1
-                encoder = Encoding.GetEncoding("iso-8859-1");
+                encoder = Encoding.GetEncoding(baseCoding);
             }
             else if (encoding == 1)
             {
@@ -38,7 +39,7 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
 
         protected string ParseText(byte[] bytes)
         {
-            return Encoding.GetEncoding("iso-8859-1").GetString(bytes);
+            return Encoding.GetEncoding(baseCoding).GetString(bytes);
         }
     }
 }

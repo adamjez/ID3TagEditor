@@ -24,6 +24,7 @@ namespace TagEditor.Lib.Common
 
             fileStream.Seek(offset, SeekOrigin.Begin);
             await WriteAsync(content);
+            fileStream.SetLength(offset + content.Length);
         }
 
         public async Task WriteAtBeginningAsync(byte[] content, int replaceLength)
@@ -44,22 +45,30 @@ namespace TagEditor.Lib.Common
             }
             else
             {
+                fileStream.SetLength(resultLength);
+
                 // First make space for tag
+                var differenceLength = content.Length - replaceLength;
                 var readPosition = fileStream.Length - bufferSize;
-                var writePosition = readPosition + content.Length - replaceLength;
-                byte[] buffer = new byte[1];
-                while (buffer.Length != bufferSize)
+                var writePosition = readPosition + differenceLength;
+                var canRead = true;
+                while (canRead)
                 {
                     var remains = readPosition > replaceLength
                        ? bufferSize
                        : bufferSize - (replaceLength - readPosition);
+                    if (remains == 0)
+                        break;
+                    if (remains < bufferSize)
+                        canRead = false;
                     // Correct position
                     readPosition += bufferSize - remains;
                     fileStream.Position = readPosition;
 
-                    buffer = await ReadNextAsync((uint)remains);
+                    var buffer = await ReadNextAsync((uint)remains);
                     readPosition -= buffer.Length;
 
+                    writePosition += bufferSize - remains;
                     fileStream.Position = writePosition;
                     await WriteAsync(buffer);
                     writePosition -= buffer.Length;
@@ -67,9 +76,6 @@ namespace TagEditor.Lib.Common
 
                 fileStream.Seek(0, SeekOrigin.Begin);
                 await WriteAsync(content);
-
-                fileStream.SetLength(resultLength);
-
             }
         }
 

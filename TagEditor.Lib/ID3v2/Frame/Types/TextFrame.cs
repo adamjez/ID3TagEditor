@@ -28,8 +28,9 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
             var buffer = encoding.GetBytes(Content);
 
             byte[] newBuffer = new byte[buffer.Length + 1];
-            buffer.CopyTo(newBuffer, 1);
+
             newBuffer[0] = encoding.GetByte();
+            buffer.CopyTo(newBuffer, 1);
 
             return newBuffer;
         }

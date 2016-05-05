@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TagEditor.Lib.Common;
-using TagEditor.Lib.ID3v1;
 using TagEditor.Lib.ID3v2.Frame;
 using TagEditor.Lib.Interfaces;
 using TagEditor.Lib.Utility;

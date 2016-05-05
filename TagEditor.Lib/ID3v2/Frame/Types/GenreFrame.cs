@@ -16,10 +16,11 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
         {
             base.Parse(bytes);
 
-            if (Content.Length >= 3 && Content[0] == '(')
+            if (Content[0] == '(')
             {
-                GenreType = (Genre.Type)Content[1];
-                Content = Content.Substring(3);
+                var index = Content.IndexOf(")", StringComparison.Ordinal);
+                GenreType = (Genre.Type)uint.Parse(Content.Substring(1, index - 1));
+                Content = Content.Substring(index + 1);
             }
 
             if (GenreType == Genre.Type.None)
@@ -30,21 +31,18 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
 
         public override byte[] Render()
         {
-            var buffer = base.Render();
+            if (string.IsNullOrEmpty(Content))
+            {
+                Content = GenreType.ToString();
+            }
 
             if (GenreType != Genre.Type.None)
             {
-                var number = BitConverter.GetBytes((int)GenreType);
-
-                var numberBytes = new byte[number.Length + 2];
-                numberBytes[0] = (byte)'(';
-                Buffer.BlockCopy(number, 0, numberBytes, 1, number.Length);
-                numberBytes[numberBytes.Length - 1] = (byte)')';
-
-                buffer = numberBytes.Concat(buffer).ToArray();
+                Content = '(' + ((int) GenreType).ToString() + ')'
+                          + Content;
             }
 
-            return buffer;
+            return base.Render();
         }
     }
 }

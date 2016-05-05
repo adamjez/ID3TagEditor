@@ -34,16 +34,6 @@ namespace TagEditor.Tests
 
                 Assert.AreEqual("Adam Ježek", newInfo.Artist.Content);
             }
-
-            //using (var file = new AudioFile())
-            //{
-            //    var editor = new Lib.Common.TagEditor();
-
-            //    file.Open("AudioFiles/test1.mp3", false);
-
-
-            //    await editor.RemoveTags(file, TagType.ID3v1);
-            //}
         }
 
         [TestMethod]

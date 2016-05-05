@@ -45,7 +45,7 @@ namespace TagEditor.Lib.ID3v2
             var frames = new List<BaseFrame>();
 
             AddTextToBaseFrame(frames, FrameType.TIT2, tag.Title.Content);
-            AddTextToBaseFrame(frames, FrameType.TOPE, tag.Artist.Content);
+            AddTextToBaseFrame(frames, FrameType.TPE1, tag.Artist.Content);
             AddTextToBaseFrame(frames, FrameType.TALB, tag.Album.Content);
 
             if (tag.Year.Content.HasValue)
