@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TagEditor.Lib.Common;
 using TagEditor.Lib.ID3v1;
 
 namespace TagEditor.Lib.Interfaces

@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,10 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AudioFile.cs" />
-    <Compile Include="ID3v1\TagInformationV2.cs" />
+    <Compile Include="ID3v2\Frame\Types\AttachedPictureFrame.cs" />
+    <Compile Include="ID3v2\Frame\Types\PictureType.cs" />
+    <Compile Include="ID3v2\TagInformationV2.cs" />
     <Compile Include="ID3v2\ExtendedHeader.cs" />
     <Compile Include="ID3v2\ExtendedHeaderFlags.cs" />
-    <Compile Include="ID3v2\FrameToTagInformation.cs" />
+    <Compile Include="ID3v2\FrameTagMaping.cs" />
     <Compile Include="ID3v2\Frame\EndOfFramesException.cs" />
     <Compile Include="ID3v2\Frame\Frame.cs" />
     <Compile Include="ID3v2\Frame\FrameHeader.cs" />
@@ -60,7 +63,7 @@
     <Compile Include="Common\TagType.cs" />
     <Compile Include="ID3v1\Genre.cs" />
     <Compile Include="ID3v1\GenreTag.cs" />
-    <Compile Include="ID3v1\ITagInformation.cs" />
+    <Compile Include="Common\ITagInformation.cs" />
     <Compile Include="ID3v1\NumberTag.cs" />
     <Compile Include="ID3v1\StringTag.cs" />
     <Compile Include="Common\TagEditor.cs" />

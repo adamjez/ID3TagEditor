@@ -1,4 +1,7 @@
-﻿namespace TagEditor.Lib.ID3v1
+﻿using TagEditor.Lib.Common;
+using TagEditor.Lib.ID3v1;
+
+namespace TagEditor.Lib.ID3v2
 {
     public class TagInformationV2 : ITagInformation
     {
@@ -10,6 +13,7 @@
         public StringBasicTag Title { get; set; }
         public NumberTag TrackNumber { get; set; }
 
+       
         public TagInformationV2()
         {
             Title = new StringBasicTag();

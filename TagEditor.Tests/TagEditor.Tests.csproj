@@ -51,6 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ID3v1ParserUnitTest.cs" />
+    <Compile Include="ID3V2RenderUnitTest.cs" />
     <Compile Include="ID3v1RenderUnitTest.cs" />
     <Compile Include="ID3v2ParserUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

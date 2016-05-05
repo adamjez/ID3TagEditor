@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TagEditor.Lib.ID3v1;
 using TagEditor.Lib.Interfaces;
 
 namespace TagEditor.Lib.Common
@@ -23,6 +22,13 @@ namespace TagEditor.Lib.Common
             var service = TagServiceBuilder.ResolveService(file, type);
 
             await service.SaveAsync(tags);
+        }
+
+        public async Task RemoveTags(IFile file, TagType type)
+        {
+            var service = TagServiceBuilder.ResolveService(file, type);
+
+            await service.RemoveTags();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace TagEditor.Lib.Interfaces
 
         Task WriteAsync(byte[] content, int offset, bool reverseDirection = false);
 
+        Task WriteAtBeginningAsync(byte[] content, int replaceLength);
+
         Task<byte[]> ReadAsync(int lastNBytes);
 
         Task<byte[]> ReadAsync(int firstNBytes, int offset);

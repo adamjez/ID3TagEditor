@@ -21,6 +21,19 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
             Content = ParseString(newArray, encoder);
         }
 
+        public override byte[] Render()
+        {
+            var encoding = GetEncoding();
+
+            var buffer = encoding.GetBytes(Content);
+
+            byte[] newBuffer = new byte[buffer.Length + 1];
+            buffer.CopyTo(newBuffer, 1);
+            newBuffer[0] = encoding.GetByte();
+
+            return newBuffer;
+        }
+
         protected string ParseString(byte[] byteArray, Encoding encoder)
         {
             var content = encoder.GetString(byteArray);
@@ -39,26 +52,6 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
             }
 
             return content;
-        }
-
-        protected Encoding GetEncoding(byte encoding)
-        {
-            Encoding encoder = null;
-            if (encoding == 0)
-            {
-                // ISO-8859-1
-                encoder = Encoding.GetEncoding("iso-8859-1");
-            }
-            else if (encoding == 1)
-            {
-                // Unicode
-                encoder = Encoding.Unicode;
-            }
-            else
-            {
-                throw new ArgumentException("Unknown type of encoding text frame");
-            }
-            return encoder;
         }
     }
 }

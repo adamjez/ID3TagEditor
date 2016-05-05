@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TagEditor.Lib.Utility;
@@ -34,6 +36,20 @@ namespace TagEditor.Lib.ID3v2.Frame
                 };
 
             }
+        }
+
+        public byte[] Render()
+        {
+            var id = Encoding.ASCII.GetBytes(FrameID);
+            var size = BitConverter.GetBytes(Size).Reverse().ToArray();
+
+            var buffer = new byte[10];
+            Buffer.BlockCopy(id, 0, buffer, 0, 4);
+            Buffer.BlockCopy(size, 0, buffer, 4, 4);
+            buffer[8] = (byte) Flags1;
+            buffer[9] = (byte)Flags2;
+
+            return buffer;
         }
     }
 }

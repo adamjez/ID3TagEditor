@@ -15,6 +15,7 @@ namespace TagEditor.Lib.ID3v2
         public uint Size { get; set; }
         public HeaderFlags Flags { get; set; }
 
+
         public static async Task<Header> Parse(byte[] bytes)
         {
             using (var ms = new MemoryStream(bytes))
@@ -25,6 +26,7 @@ namespace TagEditor.Lib.ID3v2
 
                 if (tagString != tag)
                 {
+                    Debug.WriteLine("ID3 tag not presented.");
                     return null;
                 }
 
@@ -46,6 +48,32 @@ namespace TagEditor.Lib.ID3v2
 
                 return header;
             }
+        }
+
+        public byte[] Render()
+        {
+            var buffer = new byte[10];
+
+            // Tag
+            buffer[0] = (byte)'I';
+            buffer[1] = (byte)'D';
+            buffer[2] = (byte)'3';
+
+            // Major Version
+            buffer[3] = 3;
+            // Revision Version
+            buffer[4] = 0;
+
+            // Flags
+            buffer[5] = (byte)Flags;
+
+            // Size
+            buffer[6] = (byte)((Size >> 21) & 0x7F);
+            buffer[7] = (byte)((Size >> 14) & 0x7F);
+            buffer[8] = (byte)((Size >> 7) & 0x7F);
+            buffer[9] = (byte)(Size & 0x7F);
+
+            return buffer;
         }
     }
 }

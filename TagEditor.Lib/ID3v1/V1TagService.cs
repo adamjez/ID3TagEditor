@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace TagEditor.Lib.ID3v1
 {
     public class V1TagService : TagService
     {
-        private const int size = 128;
+        private const int tagSize = 128;
         private const string tag = "TAG";
 
         public V1TagService(IFile file)
@@ -64,7 +65,7 @@ namespace TagEditor.Lib.ID3v1
 
         public override async Task SaveAsync(ITagInformation tags)
         {
-            byte[] buffer = new byte[size];
+            byte[] buffer = new byte[tagSize];
 
             using (var ms = new MemoryStream(buffer))
             {
@@ -90,16 +91,19 @@ namespace TagEditor.Lib.ID3v1
         public override async Task RemoveTags()
         {
             if (!await ParseHeaderAsync())
-                throw new InvalidOperationException("File doesn't have valid ID3v1 tag presented");
+            {
+                Debug.WriteLine("File doesn't have valid ID3v1 tag presented");
+                return;
+            }
 
-            File.Remove(size);
+            File.Remove(tagSize);
         }
 
         private async Task LoadData()
         {
             if (Content == null)
             {
-                Content = await File.ReadAsync(size);
+                Content = await File.ReadAsync(tagSize);
             }
         }
     }

@@ -66,7 +66,7 @@ namespace TagEditor.Lib.ID3v2
                     var frame = await Frame.Frame.Parse(File);
                     currentPosition += frame.Header.FullSize;
 
-                    FrameToTagInformation.Fill(frame.Base, information);
+                    FrameTagMaping.Fill(frame.Base, information);
                 }
                 catch (EndOfFramesException)
                 {
@@ -78,9 +78,30 @@ namespace TagEditor.Lib.ID3v2
             return information;
         }
 
-        public override Task SaveAsync(ITagInformation tags)
+        public override async Task SaveAsync(ITagInformation tags)
         {
-            throw new NotImplementedException();
+            var replace = 0;
+            // Overwrite existing tags if exists
+            if (await ParseHeaderAsync())
+            {
+                replace = (int)(header.Size + 10);
+            }
+
+            var frames = FrameTagMaping.CreateFrames(tags)
+                .Select(baseFrame => new Frame.Frame(baseFrame).Render())
+                .Combine();
+
+            var headerBytes = new Header
+            {
+                Size = (uint)frames.Length,
+                MajorVersion = supportedMajorVersion
+            }.Render();
+
+            var buffer = new byte[10 + frames.Length];
+            Buffer.BlockCopy(headerBytes, 0, buffer, 0, 10);
+            Buffer.BlockCopy(frames, 0, buffer, 10, frames.Length);
+
+            await File.WriteAtBeginningAsync(buffer, replace);
         }
 
         public override Task RemoveTags()

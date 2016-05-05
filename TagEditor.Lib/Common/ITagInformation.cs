@@ -1,4 +1,6 @@
-﻿namespace TagEditor.Lib.ID3v1
+﻿using TagEditor.Lib.ID3v1;
+
+namespace TagEditor.Lib.Common
 {
     public interface ITagInformation
     {

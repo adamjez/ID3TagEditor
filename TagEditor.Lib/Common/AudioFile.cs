@@ -8,6 +8,8 @@ namespace TagEditor.Lib.Common
     public class AudioFile : IFile, IDisposable
     {
         private FileStream fileStream;
+        private static int bufferSize = 1024;
+
 
         public void Open(string path, bool readOnly = true)
         {
@@ -17,13 +19,65 @@ namespace TagEditor.Lib.Common
 
         public async Task WriteAsync(byte[] content, int offset, bool reverseDirection = false)
         {
-            if(!fileStream.CanWrite)
+            if (reverseDirection)
+                offset = (int)(fileStream.Length - offset);
+
+            fileStream.Seek(offset, SeekOrigin.Begin);
+            await WriteAsync(content);
+        }
+
+        public async Task WriteAtBeginningAsync(byte[] content, int replaceLength)
+        {
+            fileStream.Seek(0, SeekOrigin.Begin);
+
+            var resultLength = content.Length + fileStream.Length - replaceLength;
+            if (content.Length == replaceLength)
+            {
+                await WriteAsync(content);
+            }
+            else if (content.Length <= replaceLength)
+            {
+                // Can write there tag 
+                await WriteAsync(content);
+                // Shift data to beginning
+                await RemoveBlock(content.Length, replaceLength - content.Length);
+            }
+            else
+            {
+                // First make space for tag
+                var readPosition = fileStream.Length - bufferSize;
+                var writePosition = readPosition + content.Length - replaceLength;
+                byte[] buffer = new byte[1];
+                while (buffer.Length != bufferSize)
+                {
+                    var remains = readPosition > replaceLength
+                       ? bufferSize
+                       : bufferSize - (replaceLength - readPosition);
+                    // Correct position
+                    readPosition += bufferSize - remains;
+                    fileStream.Position = readPosition;
+
+                    buffer = await ReadNextAsync((uint)remains);
+                    readPosition -= buffer.Length;
+
+                    fileStream.Position = writePosition;
+                    await WriteAsync(buffer);
+                    writePosition -= buffer.Length;
+                }
+
+                fileStream.Seek(0, SeekOrigin.Begin);
+                await WriteAsync(content);
+
+                fileStream.SetLength(resultLength);
+
+            }
+        }
+
+        public async Task WriteAsync(byte[] content)
+        {
+            if (!fileStream.CanWrite)
                 throw new InvalidOperationException("Cannot write into file opened for only reading");
 
-            if (reverseDirection)
-                offset = (int) (fileStream.Length - offset);
-            
-            fileStream.Seek(offset, SeekOrigin.Begin);
             await fileStream.WriteAsync(content, 0, content.Length);
         }
 
@@ -73,6 +127,36 @@ namespace TagEditor.Lib.Common
                 throw new ArgumentOutOfRangeException(nameof(lastNBytes));
 
             fileStream.SetLength(fileStream.Length - lastNBytes);
+        }
+
+        public async Task RemoveBlock(long start, long length)
+        {
+            if (length <= 0)
+                return;
+
+            var readPosition = start + length;
+            var writePosition = start;
+
+            while (readPosition < fileStream.Length)
+            {
+                var canRead = bufferSize;
+                if (readPosition + canRead > fileStream.Length)
+                {
+                    canRead = (int)(fileStream.Length - readPosition);
+                }
+
+                fileStream.Position = readPosition;
+                var buffer = await ReadNextAsync((uint)canRead);
+                readPosition += buffer.Length;
+
+                fileStream.Position = writePosition;
+                await WriteAsync(buffer);
+                writePosition += buffer.Length;
+
+            }
+
+
+            fileStream.SetLength(writePosition);
         }
 
         public void Dispose()

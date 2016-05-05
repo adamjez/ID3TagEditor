@@ -21,6 +21,10 @@ namespace TagEditor.Lib.ID3v2.Frame
             {
                 return new CommentFrame();
             }
+            else if (type == FrameType.APIC)
+            {
+                return new AttachedPictureFrame();
+            }
 
             throw new NotImplementedException();
         }
