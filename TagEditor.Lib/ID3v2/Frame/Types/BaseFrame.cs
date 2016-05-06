@@ -41,5 +41,10 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
         {
             return Encoding.GetEncoding(baseCoding).GetString(bytes);
         }
+
+        protected byte[] RenderText(string text)
+        {
+            return Encoding.GetEncoding(baseCoding).GetBytes(text);
+        }
     }
 }
