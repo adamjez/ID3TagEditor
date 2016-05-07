@@ -12,7 +12,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task YearTest()
         {
-            using (var file = new AudioFile(new LocalFile("AudioFiles/test.mp3")))
+            using (var file = new AudioFile("AudioFiles/test.mp3"))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -25,7 +25,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task GenreTest()
         {
-            using (var file = new AudioFile(new LocalFile("AudioFiles/test.mp3")))
+            using (var file = new AudioFile("AudioFiles/test.mp3"))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -38,7 +38,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task TitleTest()
         {
-            using (var file = new AudioFile(new LocalFile("AudioFiles/test.mp3")))
+            using (var file = new AudioFile("AudioFiles/test.mp3"))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -51,7 +51,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task ArtistTest()
         {
-            using (var file = new AudioFile(new LocalFile("AudioFiles/test.mp3")))
+            using (var file = new AudioFile("AudioFiles/test.mp3"))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -64,7 +64,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task TrackNumberTest()
         {
-            using (var file = new AudioFile(new LocalFile("AudioFiles/test.mp3")))
+            using (var file = new AudioFile("AudioFiles/test.mp3"))
             {
                 var editor = new Core.Common.TagEditor();
 

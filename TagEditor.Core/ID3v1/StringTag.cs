@@ -24,7 +24,9 @@ namespace TagEditor.Core.ID3v1
 
         public override void Parse(byte[] content)
         {
-            SetValue(Encoding.GetEncoding(1252).GetString(content));
+            // Encoding 1252 is not supported on UWP 
+            //SetValue(Encoding.GetEncoding(1252).GetString(content));
+            SetValue(Encoding.GetEncoding("latin1").GetString(content));
         }
 
         public override bool Validate(string val)

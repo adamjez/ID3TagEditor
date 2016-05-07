@@ -56,7 +56,6 @@
     <Compile Include="ID3V2RenderUnitTest.cs" />
     <Compile Include="ID3v1RenderUnitTest.cs" />
     <Compile Include="ID3v2ParserUnitTest.cs" />
-    <Compile Include="LocalFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

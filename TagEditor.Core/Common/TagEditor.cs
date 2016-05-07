@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using TagEditor.Core.ID3v1;
+using TagEditor.Core.ID3v2;
 using TagEditor.Core.Interfaces;
 
 namespace TagEditor.Core.Common
@@ -15,6 +18,25 @@ namespace TagEditor.Core.Common
                 throw new ArgumentException("File is in invalid format", nameof(file));
             }
             return await service.ParseAsync();
+        }
+
+        public async Task<ITagInformation> RetrieveBasicTagsAsync(IFile file)
+        {
+            TagService service = new V1TagService(file);
+
+            if (!await service.ParseHeaderAsync())
+            {
+                service = new V2TagService(file);
+            }
+            try
+            {
+                return await service.ParseAsync();
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Exception While retrieving basi tags: " + exc.Message);
+                return null;
+            }
         }
 
         public async Task SetTags(IFile file, ITagInformation tags, TagType type)

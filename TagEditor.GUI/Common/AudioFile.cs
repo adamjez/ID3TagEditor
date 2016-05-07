@@ -1,20 +1,20 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using TagEditor.Core.Interfaces;
 
-namespace TagEditor.Core.Common
+namespace TagEditor.GUI.Common
 {
     public class AudioFile : IFile, IDisposable
     {
-        private System.IO.Stream fileStream;
-        private IFileAbstraction file;
+        private Stream fileStream;
         private static int bufferSize = 1024;
 
-        public AudioFile(IFileAbstraction file, bool readOnly = true)
+        public AudioFile(Stream filestream, bool readOnly = false)
         {
-            var accessLevel = readOnly ? System.IO.FileAccess.Read : System.IO.FileAccess.ReadWrite;
-            this.file = file;
-            fileStream = file.Stream;
+            var accessLevel = readOnly ? FileAccess.Read : FileAccess.ReadWrite;
+
+            this.fileStream = filestream;
         }
 
         public async Task WriteAsync(byte[] content, int offset, bool reverseDirection = false)
@@ -22,14 +22,14 @@ namespace TagEditor.Core.Common
             if (reverseDirection)
                 offset = (int)(fileStream.Length - offset);
 
-            fileStream.Seek(offset, System.IO.SeekOrigin.Begin);
+            fileStream.Seek(offset, SeekOrigin.Begin);
             await WriteAsync(content);
             fileStream.SetLength(offset + content.Length);
         }
 
         public async Task WriteAtBeginningAsync(byte[] content, int replaceLength)
         {
-            fileStream.Seek(0, System.IO.SeekOrigin.Begin);
+            fileStream.Seek(0, SeekOrigin.Begin);
 
             var resultLength = content.Length + fileStream.Length - replaceLength;
             if (content.Length == replaceLength)
@@ -74,7 +74,7 @@ namespace TagEditor.Core.Common
                     writePosition -= buffer.Length;
                 }
 
-                fileStream.Seek(0, System.IO.SeekOrigin.Begin);
+                fileStream.Seek(0, SeekOrigin.Begin);
                 await WriteAsync(content);
             }
         }
@@ -96,7 +96,7 @@ namespace TagEditor.Core.Common
 
             var offset = (int)(fileStream.Length - lastNBytes);
 
-            fileStream.Seek(offset, System.IO.SeekOrigin.Begin);
+            fileStream.Seek(offset, SeekOrigin.Begin);
             await fileStream.ReadAsync(content, 0, lastNBytes);
 
             return content;
@@ -109,7 +109,7 @@ namespace TagEditor.Core.Common
 
             var content = new byte[firstNBytes];
 
-            fileStream.Seek(offset, System.IO.SeekOrigin.Begin);
+            fileStream.Seek(offset, SeekOrigin.Begin);
             await fileStream.ReadAsync(content, 0, firstNBytes);
 
             return content;

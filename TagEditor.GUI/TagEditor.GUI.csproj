@@ -95,7 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\StorageItemThumbnailToImageConverter.cs" />
+    <Compile Include="Common\AudioFile.cs" />
     <Compile Include="Models\FileItem.cs" />
     <Compile Include="Models\FolderItem.cs" />
     <Compile Include="Models\GridItem.cs" />
@@ -138,6 +138,9 @@
       <Project>{3e9e6f4c-2893-4148-8424-f1d15e806e8e}</Project>
       <Name>TagEditor.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Converters\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
