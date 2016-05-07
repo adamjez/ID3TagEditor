@@ -1,10 +1,10 @@
 ﻿using System.Drawing;
-using System.Net.Mime;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TagEditor.Lib.Common;
-using TagEditor.Lib.ID3v1;
-using TagEditor.Lib.ID3v2;
+using TagEditor.Core.Common;
+using TagEditor.Core.ID3v1;
 
 namespace TagEditor.Tests
 {
@@ -14,11 +14,9 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderArtistTest()
         {
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3", false);
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
                 info.Artist.SetValue("Adam Ježek");
@@ -26,11 +24,9 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v2);
             }
 
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3");
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
@@ -41,11 +37,9 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderTitleTest()
         {
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3", false);
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
                 info.Title.SetValue("Tituležek");
@@ -53,11 +47,9 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v2);
             }
 
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3");
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
@@ -68,11 +60,9 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderGenreTest()
         {
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3", false);
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
                 info.Genre.SetValue(Genre.Type.Bass);
@@ -80,11 +70,9 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v2);
             }
 
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3");
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
@@ -95,11 +83,9 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderYearTest()
         {
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3", false);
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
                 info.Year.SetValue(2010);
@@ -107,11 +93,9 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v2);
             }
 
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3");
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
@@ -122,11 +106,9 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderTrackNumberTest()
         {
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3", false);
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
                 info.TrackNumber.SetValue(2);
@@ -134,11 +116,9 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v2);
             }
 
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3");
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
@@ -149,28 +129,32 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderAlbumArtTest()
         {
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3", false);
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
 
-                info.AlbumArt.SetValue(new Bitmap("ImageFiles/Adele.png"));
+                var bitmap = new Bitmap("ImageFiles/Adele.png");
+                using(var ms =  new MemoryStream())
+                {
+                    var format = ImageFormat.Png;
+                    bitmap.Save(ms, format);
 
-                await editor.SetTags(file, info, TagType.ID3v2);
+                    info.AlbumArt.SetValue(ms.ToArray(), format.ToString());
+
+                    await editor.SetTags(file, info, TagType.ID3v2);
+                }
+
             }
 
-            using (var file = new AudioFile())
+            using (var file = new AudioFile(new LocalFile("AudioFiles/test1.mp3")))
             {
-                file.Open("AudioFiles/test1.mp3");
-
-                var editor = new Lib.Common.TagEditor();
+                var editor = new Core.Common.TagEditor();
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
-                Assert.AreNotEqual(null, newInfo.AlbumArt.Content);
+                Assert.IsTrue(newInfo.AlbumArt.Content.Length > 0);
             }
         }
     }

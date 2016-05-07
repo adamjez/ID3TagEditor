@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AudioFile.cs" />
+    <Compile Include="Common\FileAbstraction.cs" />
     <Compile Include="Common\ITagInformation.cs" />
     <Compile Include="Common\TagEditor.cs" />
     <Compile Include="Common\TagInformation.cs" />

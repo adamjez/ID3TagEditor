@@ -10,6 +10,13 @@ namespace TagEditor.Core.ID3v1
             Content = value;
         }
 
+        public void SetValue(byte[] value, string mimeType)
+        {
+            MimeType = mimeType;
+            SetValue(value);
+        }
+
+
         public string Description { get; set; }
 
         public byte[] Content { get; private set;  }

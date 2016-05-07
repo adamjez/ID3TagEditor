@@ -4,8 +4,6 @@ namespace TagEditor.Core.Interfaces
 {
     public interface IFile
     {
-        void Open(string path, bool readOnly = true);
-
         Task WriteAsync(byte[] content, int offset, bool reverseDirection = false);
 
         Task WriteAtBeginningAsync(byte[] content, int replaceLength);
@@ -18,5 +16,6 @@ namespace TagEditor.Core.Interfaces
 
         void Remove(int lastNBytes);
 
+        Task RemoveBlock(long start, long length);
     }
 }

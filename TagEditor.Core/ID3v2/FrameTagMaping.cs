@@ -37,7 +37,7 @@ namespace TagEditor.Core.ID3v2
                     break;
                 case FrameType.APIC:
                     var pictureFrame = (AttachedPictureFrame) frame;
-                    tag.AlbumArt.SetValue(pictureFrame.Image);
+                    tag.AlbumArt.SetValue(pictureFrame.Image, pictureFrame.MimeType);
                     tag.AlbumArt.Description = pictureFrame.Description;
                     break;
                 default:
@@ -81,7 +81,8 @@ namespace TagEditor.Core.ID3v2
                 {
                     Image = tag.AlbumArt.Content,
                     PictureType = PictureType.FrontCover,
-                    Description = tag.AlbumArt.Description
+                    Description = tag.AlbumArt.Description,
+                    MimeType = tag.AlbumArt.MimeType
                 });
             }
 

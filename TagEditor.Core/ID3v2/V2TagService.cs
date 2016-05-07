@@ -83,26 +83,35 @@ namespace TagEditor.Core.ID3v2
                 replace = (int)(header.Size + 10);
             }
 
-            var frames = FrameTagMaping.CreateFrames(tags)
-                .Select(baseFrame => new Frame.Frame(baseFrame).Render())
+            var frames = FrameTagMaping.CreateFrames(tags);
+            if (frames.Count == 0)
+            {
+                await RemoveTags();
+                return;
+            }
+            var framesRendered = frames.Select(baseFrame => new Frame.Frame(baseFrame).Render())
                 .Combine();
 
             var headerBytes = new Header
             {
-                Size = (uint)frames.Length,
+                Size = (uint)framesRendered.Length,
                 MajorVersion = supportedMajorVersion
             }.Render();
 
-            var buffer = new byte[10 + frames.Length];
+            var buffer = new byte[10 + framesRendered.Length];
             Buffer.BlockCopy(headerBytes, 0, buffer, 0, 10);
-            Buffer.BlockCopy(frames, 0, buffer, 10, frames.Length);
+            Buffer.BlockCopy(framesRendered, 0, buffer, 10, framesRendered.Length);
 
             await File.WriteAtBeginningAsync(buffer, replace);
         }
 
-        public override Task RemoveTags()
+        public override async  Task RemoveTags()
         {
-            throw new NotImplementedException();
+            if (await ParseHeaderAsync())
+            {
+                var replace = (int)(header.Size + 10);
+                await File.RemoveBlock(0, replace);
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ namespace TagEditor.Core.ID3v2.Frame.Types
             // ToDo: make indexing with some nicer way
             var encoder = GetEncoding();
 
-            var mimeType = RenderText(MimeType);
+            var mimeType = RenderText(MimeType.ToLower());
 
             Byte[] description = null;
             if (!string.IsNullOrEmpty(Description))
