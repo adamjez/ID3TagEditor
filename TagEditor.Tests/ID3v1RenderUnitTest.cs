@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TagEditor.Core.Common;
 using TagEditor.Core.ID3v1;
@@ -11,7 +12,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderArtistTest()
         {
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -21,7 +22,7 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v1);
             }
 
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -34,7 +35,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderTitleTest()
         {
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -44,7 +45,7 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v1);
             }
 
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -57,7 +58,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderGenreTest()
         {
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -67,7 +68,7 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v1);
             }
 
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -80,7 +81,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderYearTest()
         {
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -90,7 +91,7 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v1);
             }
 
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -103,7 +104,7 @@ namespace TagEditor.Tests
         [TestMethod]
         public async Task RenderTrackNumberTest()
         {
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
@@ -113,7 +114,7 @@ namespace TagEditor.Tests
                 await editor.SetTags(file, info, TagType.ID3v1);
             }
 
-            using (var file = new AudioFile("AudioFiles/test1.mp3"))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 

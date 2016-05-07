@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using TagEditor.Core.Interfaces;
+using TagEditor.Core.Utility;
 
 namespace TagEditor.Core.ID3v1
 {
@@ -18,7 +18,7 @@ namespace TagEditor.Core.ID3v1
             if (capacity < 0)
                 capacity = BytesCapacity;
 
-            var array = Encoding.GetEncoding(1252)
+            var array = Extensions.GetDefaultEncodingV1()
                 .GetBytes(Content.ToString());
 
             if(capacity > 0)

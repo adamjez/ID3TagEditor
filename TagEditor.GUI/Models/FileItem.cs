@@ -5,7 +5,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using TagEditor.Core.Common;
-using TagEditor.GUI.Common;
+using TagLib;
 
 namespace TagEditor.GUI.Models
 {
@@ -25,23 +25,53 @@ namespace TagEditor.GUI.Models
             Thumbnail = new BitmapImage();
             Thumbnail.SetSource(thumbnail);
 
+            var stream = await File.OpenStreamForReadAsync();
             if (File.FileType == ".mp3")
             {
-                var stream = (await File.OpenAsync(FileAccessMode.Read)).AsStream();
-                using (var file = new AudioFile(stream, true))
-                {
-                    var editor = new Core.Common.TagEditor();
-
-                    var info = await editor.RetrieveBasicTagsAsync(file);
-
-                    if (info != null)
-                    {
-                        Description1 = info.Title.Content;
-                        Description2 = info.Artist.Content;
-                    }
-                }
+                await LoadMp3(stream);
+            }
+            else
+            {
+                LoadOthers(stream);
             }
         }
 
+        private void LoadOthers(Stream stream)
+        {
+            var tagFile = TagLib.File.Create(new StreamFileAbstraction(File.Name,
+                stream, stream));
+
+            TagLib.Tag tags = null;
+            if (File.FileType == ".flac")
+            {
+                tags = tagFile.GetTag(TagTypes.FlacMetadata);
+            }
+            else if (File.FileType == ".m4a")
+            {
+                tags = tagFile.GetTag(TagTypes.Apple);
+            }
+
+            if (tags != null)
+            {
+                Description1 = tags.Title;
+                Description2 = tags.FirstAlbumArtist;
+            }
+        }
+
+        private async Task LoadMp3(Stream stream)
+        {
+            using (var file = new AudioFile(stream, true))
+            {
+                var editor = new Core.Common.TagEditor();
+
+                var info = await editor.RetrieveBasicTagsAsync(file);
+
+                if (info != null)
+                {
+                    Description1 = info.Title.Content;
+                    Description2 = info.Artist.Content;
+                }
+            }
+        }
     }
 }

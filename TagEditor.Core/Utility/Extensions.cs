@@ -93,6 +93,12 @@ namespace TagEditor.Core.Utility
             }
         }
 
+        public static Encoding GetDefaultEncodingV1()
+        {
+            // Encoding 1252 is not supported on UWP 
+            return Encoding.GetEncoding(1252) ?? Encoding.GetEncoding("latin1");
+        }
+
 
         // Source: http://stackoverflow.com/questions/283456/byte-array-pattern-search
         public static int IndexOf(this byte[] self, byte[] candidate)

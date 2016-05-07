@@ -22,7 +22,7 @@ namespace TagEditor.GUI.ViewModels
         {
             IsBusy = true;
 
-            var currentFolger = await Windows.Storage.StorageFolder.GetFolderFromPathAsync(path);
+            var currentFolger = await StorageFolder.GetFolderFromPathAsync(path);
 
             CurrentFolderName = currentFolger.DisplayName;
 
@@ -56,7 +56,7 @@ namespace TagEditor.GUI.ViewModels
 
         private ICollection<StorageFile> FilterFiles(IReadOnlyCollection<StorageFile> files)
         {
-            var supportedTypes = new string[] {".mp3", ".ogg", ".flac"};
+            var supportedTypes = new string[] {".mp3", ".flac", ".m4a"};
             return files.Where(file => supportedTypes.Contains(file.FileType)).ToList();
         }
     }
