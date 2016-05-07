@@ -70,11 +70,11 @@ namespace TagEditor.Lib.ID3v1
             using (var ms = new MemoryStream(buffer))
             {
                 await ms.WriteBytesAsync(Encoding.ASCII.GetBytes(tag));
-                await ms.WriteBytesAsync(tags.Title.Render());
-                await ms.WriteBytesAsync(tags.Artist.Render());
-                await ms.WriteBytesAsync(tags.Album.Render());
+                await ms.WriteBytesAsync(tags.Title.Render(30));
+                await ms.WriteBytesAsync(tags.Artist.Render(30));
+                await ms.WriteBytesAsync(tags.Album.Render(30));
                 await ms.WriteBytesAsync(tags.Year.Render());
-                await ms.WriteBytesAsync(tags.Comment.Render().Take(28).ToArray());
+                await ms.WriteBytesAsync(tags.Comment.Render(30).Take(28).ToArray());
                 await ms.WriteBytesAsync(new byte[] { 0 });
                 await ms.WriteBytesAsync(tags.TrackNumber.Render());
                 await ms.WriteBytesAsync(tags.Genre.Render());

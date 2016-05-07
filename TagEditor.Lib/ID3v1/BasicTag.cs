@@ -13,11 +13,16 @@ namespace TagEditor.Lib.ID3v1
         }
 
         public T Content { get; protected set; }
-        public virtual byte[] Render()
+        public virtual byte[] Render(int capacity = -1)
         {
+            if (capacity < 0)
+                capacity = BytesCapacity;
+
             var array = Encoding.GetEncoding(1252)
                 .GetBytes(Content.ToString());
-            Array.Resize(ref array, BytesCapacity);
+
+            if(capacity > 0)
+                Array.Resize(ref array, capacity);
 
             return array;
         }

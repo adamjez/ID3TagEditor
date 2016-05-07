@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -56,7 +57,12 @@
     <Compile Include="ID3v2ParserUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TagEditor.Lib\TagEditor.Lib.csproj">
+      <Project>{5FE45D74-EF2B-44E2-9A54-656CFCED73BC}</Project>
+      <Name>TagEditor.Lib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="AudioFiles\test.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -64,12 +70,9 @@
     <Content Include="AudioFiles\test1.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TagEditor.Lib\TagEditor.Lib.csproj">
-      <Project>{5fe45d74-ef2b-44e2-9a54-656cfced73bc}</Project>
-      <Name>TagEditor.Lib</Name>
-    </ProjectReference>
+    <Content Include="ImageFiles\Adele.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

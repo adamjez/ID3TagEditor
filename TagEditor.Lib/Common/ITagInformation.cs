@@ -11,6 +11,6 @@ namespace TagEditor.Lib.Common
         StringNumberTag Year { get; }
         StringBasicTag Title { get; }
         NumberTag TrackNumber { get; }
-
+        ImageTag AlbumArt { get; }
     }
 }

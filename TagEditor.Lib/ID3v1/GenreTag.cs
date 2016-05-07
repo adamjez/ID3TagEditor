@@ -12,7 +12,7 @@ namespace TagEditor.Lib.ID3v1
             Content = Genre.Type.None;
         }
 
-        public override byte[] Render()
+        public override byte[] Render(int capacity = -1)
         {
             return new[] { (byte)Content };
         }

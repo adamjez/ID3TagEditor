@@ -35,6 +35,11 @@ namespace TagEditor.Lib.ID3v2
                 case FrameType.COMM:
                     tag.Comment.SetValue(((CommentFrame)frame).Content);
                     break;
+                case FrameType.APIC:
+                    var pictureFrame = (AttachedPictureFrame) frame;
+                    tag.AlbumArt.SetValue(pictureFrame.Image);
+                    tag.AlbumArt.Description = pictureFrame.Description;
+                    break;
                 default:
                     break;
             }
@@ -67,6 +72,16 @@ namespace TagEditor.Lib.ID3v2
                 frames.Add(new GenreFrame()
                 {
                     GenreType = tag.Genre.Content
+                });
+            }
+
+            if (tag.AlbumArt.Content != null)
+            {
+                frames.Add(new AttachedPictureFrame()
+                {
+                    Image = tag.AlbumArt.Content,
+                    PictureType = PictureType.FrontCover,
+                    Description = tag.AlbumArt.Description
                 });
             }
 

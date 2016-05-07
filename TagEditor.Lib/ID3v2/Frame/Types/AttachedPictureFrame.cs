@@ -34,11 +34,12 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
             // Parsing Description     
             var buffer = bytes.SubArray(index + 3);
 
-            index = buffer.IndexOf(encoder.GetDelimiter());
+            var delimiter = encoder.GetDelimiter();
+            index = buffer.IndexOf(delimiter);
 
             Description = encoder.GetString(buffer.SubArray(0, index));
 
-            var pictureData = buffer.SubArray(Description.Length + 1);
+            var pictureData = buffer.SubArray(Description.Length + delimiter.Length);
             using (MemoryStream ms = new MemoryStream(pictureData))
             {
                 Image = Image.FromStream(ms);
@@ -54,24 +55,36 @@ namespace TagEditor.Lib.ID3v2.Frame.Types
             {
                 Image.Save(ms, defaultFormat);
 
-                var mimeType = RenderText(defaultFormat.ToString());
+                var mimeType = RenderText(defaultFormat.ToString().ToLower());
 
-                var buffer = new byte[500];
+                Byte[] description = null;
+                if (!string.IsNullOrEmpty(Description))
+                {
+                    description = encoder.GetBytes(Description);
+                }
+
+                var delimiter = encoder.GetDelimiter();
+                var resultSize = 3 + mimeType.Length + (description?.Length ?? 0)  + delimiter.Length + ms.Length;
+
+                var buffer = new byte[resultSize];
+
                 buffer[0] = encoder.GetByte();
                 Buffer.BlockCopy(mimeType, 0, buffer, 1, mimeType.Length);
                 buffer[mimeType.Length + 1] = 0x00;
                 buffer[mimeType.Length + 2] = (byte) PictureType;
 
-                var description = encoder.GetBytes(Description);
-                Buffer.BlockCopy(description, 0, buffer, mimeType.Length + 3, description.Length);
-                var delimiter = encoder.GetDelimiter();
-                Buffer.BlockCopy(delimiter, 0, buffer, mimeType.Length + description.Length + 3, delimiter.Length);
+                // Description with delimiter       
+                if (description != null)
+                {
+                    Buffer.BlockCopy(description, 0, buffer, mimeType.Length + 3, description.Length);
+                }
+                Buffer.BlockCopy(delimiter, 0, buffer, mimeType.Length + (description?.Length ?? 0) + 3, delimiter.Length);
 
                 // Image
                 ms.Seek(0, SeekOrigin.Begin);
-                ms.Write(buffer, mimeType.Length + description.Length + delimiter.Length + 3, (int)ms.Length);
-
-                return buffer;;
+                ms.Read(buffer, mimeType.Length + (description?.Length ?? 0) + delimiter.Length + 3, (int)ms.Length);
+     
+                return buffer;
             }
         }
     }

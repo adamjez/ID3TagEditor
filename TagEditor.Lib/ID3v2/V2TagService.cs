@@ -54,7 +54,7 @@ namespace TagEditor.Lib.ID3v2
                 currentPosition = 10 + extendedHeader.Size;
             }
 
-            var information = new TagInformationV2();
+            var information = new TagInformation();
             while (currentPosition + 10 < header.Size)
             {
                 try

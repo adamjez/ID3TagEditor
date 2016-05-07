@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Drawing;
+using System.Net.Mime;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TagEditor.Lib.Common;
 using TagEditor.Lib.ID3v1;
@@ -18,7 +20,7 @@ namespace TagEditor.Tests
 
                 var editor = new Lib.Common.TagEditor();
 
-                var info = new TagInformationV2();
+                var info = new TagInformation();
                 info.Artist.SetValue("Adam Ježek");
 
                 await editor.SetTags(file, info, TagType.ID3v2);
@@ -45,7 +47,7 @@ namespace TagEditor.Tests
 
                 var editor = new Lib.Common.TagEditor();
 
-                var info = new TagInformationV2();
+                var info = new TagInformation();
                 info.Title.SetValue("Tituležek");
 
                 await editor.SetTags(file, info, TagType.ID3v2);
@@ -72,7 +74,7 @@ namespace TagEditor.Tests
 
                 var editor = new Lib.Common.TagEditor();
 
-                var info = new TagInformationV2();
+                var info = new TagInformation();
                 info.Genre.SetValue(Genre.Type.Bass);
 
                 await editor.SetTags(file, info, TagType.ID3v2);
@@ -99,7 +101,7 @@ namespace TagEditor.Tests
 
                 var editor = new Lib.Common.TagEditor();
 
-                var info = new TagInformationV2();
+                var info = new TagInformation();
                 info.Year.SetValue(2010);
 
                 await editor.SetTags(file, info, TagType.ID3v2);
@@ -126,7 +128,7 @@ namespace TagEditor.Tests
 
                 var editor = new Lib.Common.TagEditor();
 
-                var info = new TagInformationV2();
+                var info = new TagInformation();
                 info.TrackNumber.SetValue(2);
 
                 await editor.SetTags(file, info, TagType.ID3v2);
@@ -141,6 +143,34 @@ namespace TagEditor.Tests
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
                 Assert.AreEqual((uint?)2, newInfo.TrackNumber.Content);
+            }
+        }
+
+        [TestMethod]
+        public async Task RenderAlbumArtTest()
+        {
+            using (var file = new AudioFile())
+            {
+                file.Open("AudioFiles/test1.mp3", false);
+
+                var editor = new Lib.Common.TagEditor();
+
+                var info = new TagInformation();
+
+                info.AlbumArt.SetValue(new Bitmap("ImageFiles/Adele.png"));
+
+                await editor.SetTags(file, info, TagType.ID3v2);
+            }
+
+            using (var file = new AudioFile())
+            {
+                file.Open("AudioFiles/test1.mp3");
+
+                var editor = new Lib.Common.TagEditor();
+
+                var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
+
+                Assert.AreNotEqual(null, newInfo.AlbumArt.Content);
             }
         }
     }

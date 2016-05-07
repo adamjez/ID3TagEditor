@@ -24,7 +24,7 @@ namespace TagEditor.Lib.ID3v1
             return !val.HasValue || (val > 0 && val <= Math.Pow(val.Value, BytesCapacity * 8));
         }
 
-        public override byte[] Render()
+        public override byte[] Render(int capacity = -1)
         {
             var bytes = Content.HasValue 
                 ? BitConverter.GetBytes(Content.Value) : new byte[BytesCapacity];
