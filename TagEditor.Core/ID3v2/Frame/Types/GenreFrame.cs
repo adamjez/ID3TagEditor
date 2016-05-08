@@ -23,6 +23,9 @@ namespace TagEditor.Core.ID3v2.Frame.Types
                 var index = Content.IndexOf(")", StringComparison.Ordinal);
                 GenreType = (Genre.Type)uint.Parse(Content.Substring(1, index - 1));
                 Content = Content.Substring(index + 1);
+
+                if (string.IsNullOrEmpty(Content))
+                    Content = GenreType.ToString();
             }
 
             if (GenreType == Genre.Type.None)

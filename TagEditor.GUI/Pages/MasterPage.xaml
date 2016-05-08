@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Margin="8">
             <TextBlock Text="{Binding CurrentFolderName}" FontSize="38"/>
@@ -20,16 +21,16 @@
                   SelectionChanged="Selector_OnSelectionChanged" Margin="8">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Grid MinWidth="300">
+                    <Grid Width="300">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/> 
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                Width="80" Height="80" Margin="0" HorizontalAlignment="Left">
+                                Width="80" Height="80" Margin="0">
                             <Image Source="{Binding Thumbnail}" Stretch="UniformToFill"></Image>
                         </Border>
-                        <Grid Grid.Column="1" Margin="8">
+                        <Grid Grid.Column="1" Margin="8" HorizontalAlignment="Stretch">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -44,7 +45,7 @@
             </GridView.ItemTemplate>
         </GridView>
         <ProgressRing Grid.Row="1" IsActive="{Binding IsBusy}" Width="100" Height="100"/>
-        <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
+        <CommandBar Grid.Row="2" VerticalAlignment="Bottom">
             <AppBarButton Icon="Edit" Label="Edit" x:Name="EditButton" Visibility="Collapsed" Click="EditButton_OnClick"/>
             <AppBarToggleButton Icon="SelectAll" Label="Select Multiple" Click="SelectButton_OnClick"/>
             <AppBarButton Icon="OpenFile" Label="Load Audio File" Click="ButtonBase_OnClick"/>

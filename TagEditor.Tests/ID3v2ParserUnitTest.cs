@@ -57,7 +57,7 @@ namespace TagEditor.Tests
 
                 var info = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
-                Assert.AreEqual("Ádám Jéž", info.Artist.Content);
+                Assert.AreEqual("MP3 artist", info.Artist.Content);
             }
         }
 

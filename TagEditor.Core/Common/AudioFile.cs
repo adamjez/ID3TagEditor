@@ -154,50 +154,21 @@ namespace TagEditor.Core.Common
             var readPosition = start + length;
             var writePosition = start;
 
-            var buffer = new byte[] {1};
-            var iterations = 0;
             var shiftLength = fileStream.Length - start;
             while (shiftLength > 0)
             {
                 fileStream.Position = readPosition;
-                buffer = Test((int)Math.Min(shiftLength, bufferSize));
+                var buffer = await ReadNextAsync((int)Math.Min(shiftLength, bufferSize));
                 shiftLength -= buffer.Length;
                 readPosition += buffer.Length;
 
                 fileStream.Position = writePosition;
-                fileStream.Write(buffer, 0, buffer.Length);
+                await fileStream.WriteAsync(buffer, 0, buffer.Length);
                 writePosition += buffer.Length;
-
-                iterations++;
             }
-            Debug.WriteLine("Iterations: " + iterations);
-
 
             fileStream.SetLength(writePosition);
         }
-
-        public byte[] Test(int length)
-        {
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
-
-            if (length == 0)
-                return new byte[0];
-
-            var content = new byte[length];
-
-            int count = 0, read = 0, needed = length;
-            do
-            {
-                count = fileStream.Read(content, read, needed);
-
-                read += count;
-                needed -= count;
-            } while (needed > 0 && count != 0);
-
-            return content;
-        }
-
         public void Dispose()
         {
             if (fileStream != null)

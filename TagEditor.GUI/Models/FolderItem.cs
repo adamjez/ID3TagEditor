@@ -19,9 +19,7 @@ namespace TagEditor.GUI.Models
 
         public override async Task LoadContent()
         {
-            var thumbnail = await Folder.GetThumbnailAsync(ThumbnailMode.PicturesView);
-            //Thumbnail = new BitmapImage();
-            //Thumbnail.SetSource(thumbnail);
+            var props = await Folder.GetBasicPropertiesAsync();
         }
     }
 }

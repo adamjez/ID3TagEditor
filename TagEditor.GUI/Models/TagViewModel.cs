@@ -23,13 +23,17 @@ namespace TagEditor.GUI.Models
 
         public TagViewModel()
         {
-            AlbumArt = new MultiInfo<ImageTag>();
+            AlbumArt = new MultiInfo<ImageTag>(true);
+            AlbumArtist = new MultiInfo<string>(true);
+            Artist = new MultiInfo<string>(true);
+            Genre = new MultiInfo<string>(true);
+            Album = new MultiInfo<string>(true);
+            Year = new MultiInfo<uint?>(true);
         }
 
         public void ToTag(Tag tag)
         {
             tag.Title = Title;
-            //tag.AlbumArtists = this.AlbumArtist.Split(';').Select(x => x.Trim()).ToArray();
             tag.Performers = new [] { Artist.Content };
             tag.Album = Album.Content;
             tag.Year = Year.Content ?? 0;

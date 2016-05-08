@@ -108,14 +108,14 @@ namespace TagEditor.GUI.Pages
                 this.GridView.IsItemClickEnabled = false;
                 this.GridView.SelectionMode = ListViewSelectionMode.Multiple;
                 this.GridView.SelectionChanged -= Selector_OnSelectionChanged;
-                this.EditButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                this.EditButton.Visibility = Visibility.Visible;
             }
             else
             {
                 this.GridView.SelectionChanged += Selector_OnSelectionChanged;
                 this.GridView.IsItemClickEnabled = true;
                 this.GridView.SelectionMode = ListViewSelectionMode.Single;
-                this.EditButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                this.EditButton.Visibility = Visibility.Collapsed;
             }
         }
 

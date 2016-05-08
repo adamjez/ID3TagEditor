@@ -24,8 +24,9 @@ namespace TagEditor.GUI.Models
             SourceItems = new ObservableCollection<T>(items);
         }
 
-        public MultiInfo()
+        public MultiInfo(bool isEdited = false)
         {
+            IsEdited = isEdited;
             SourceItems = new ObservableCollection<T>();
         }
 

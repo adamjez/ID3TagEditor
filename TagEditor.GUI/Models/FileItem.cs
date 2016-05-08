@@ -41,7 +41,7 @@ namespace TagEditor.GUI.Models
             var tagFile = TagLib.File.Create(new StreamFileAbstraction(File.Name,
                 stream, stream));
 
-            TagLib.Tag tags = null;
+            Tag tags = null;
             if (File.FileType == ".flac")
             {
                 tags = tagFile.GetTag(TagTypes.FlacMetadata);
@@ -54,7 +54,7 @@ namespace TagEditor.GUI.Models
             if (tags != null)
             {
                 Description1 = tags.Title;
-                Description2 = tags.FirstAlbumArtist;
+                Description2 = tags.FirstPerformer;
             }
         }
 

@@ -78,10 +78,12 @@ namespace TagEditor.Core.ID3v2
         public override async Task SaveAsync(ITagInformation tags)
         {
             var replace = 0;
+            var replaceContent = 0;
             // Overwrite existing tags if exists
             if (await ParseHeaderAsync())
             {
-                replace = (int)(header.Size + 10);
+                replaceContent = (int)header.Size;
+                replace = replaceContent + 10;
             }
 
             var frames = FrameTagMaping.CreateFrames(tags);
@@ -94,7 +96,7 @@ namespace TagEditor.Core.ID3v2
                 .Combine();
 
             // Padding for big speedup
-            var padding = (framesRendered.Length < header.Size) ? (header.Size - framesRendered.Length) : 0;
+            var padding = (framesRendered.Length < replaceContent) ? (replaceContent - framesRendered.Length) : 0;
 
             var headerBytes = new Header
             {

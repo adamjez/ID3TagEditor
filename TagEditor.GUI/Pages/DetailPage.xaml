@@ -26,16 +26,16 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel DataContext="{Binding Tag.AlbumArt}">
+                <StackPanel>
                     <TextBlock Text="Album Art" FontSize="30"></TextBlock>
                     <Grid Background="{StaticResource AppBarBackgroundThemeBrush}" Height="256" Width="256"
                           HorizontalAlignment="Left">
-                        <Image Source="{Binding Content.Image}"  Stretch="Uniform"/>
+                        <Image Source="{Binding Tag.AlbumArt.Content.Image}"  Stretch="Uniform"/>
                     </Grid>
                     <Button Content="Load from File" Command="{Binding Path=LoadImageCommand}"  Width="242" Margin="6"/>
                     <Button Content="Remove album art" Command="{Binding Path=RemoveImageCommand}" Width="242" Margin="6"/>
                     <TextBlock Text="Multiple Album Arts" HorizontalAlignment="Center" Foreground="Red"
-                              Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                              Visibility="{Binding Tag.AlbumArt.MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </StackPanel>
                
             </Grid>
@@ -78,7 +78,7 @@
                         </Grid.ColumnDefinitions>
                         <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}"
                                   Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBox Grid.Column="1" Header="Album" Text="{Binding Content, Mode=TwoWay}"
+                        <TextBox Grid.Column="1" Header="Album Artist" Text="{Binding Content, Mode=TwoWay}"
                                  IsEnabled="{Binding IsEdited}"></TextBox>
                     </Grid>
                     

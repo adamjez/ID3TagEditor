@@ -22,7 +22,7 @@ namespace TagEditor.GUI.ViewModels
         {
             PlayCommand = new PlayCommand(this);
             SaveCommand = new SaveCommand(this);
-            RemoveImageCommand = new RelayCommand(() => Tag.AlbumArt = null);
+            RemoveImageCommand = new RemoveImageCommand(this);
             LoadImageCommand = new LoadImageCommand(this);
             fileInformations = new ObservableCollection<FileInformation>();
             RemoveCommand = new RemoveCommand(this);
@@ -33,6 +33,7 @@ namespace TagEditor.GUI.ViewModels
         {
             IsBusy = true;
 
+            fileInformations.Clear();
             Paths = paths;
             MoreFiles = paths.Length > 1;
             if (!MoreFiles)

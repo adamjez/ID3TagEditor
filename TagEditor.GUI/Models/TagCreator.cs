@@ -84,14 +84,6 @@ namespace TagEditor.GUI.Models
             };
         }
 
-        private static void AddIfNotEmpty(string content, MultiInfo<string> albums)
-        {
-            if (!string.IsNullOrEmpty(content))
-            {
-                albums.AddUniqueToItems(content);
-            }
-        }
-
         public static async Task<TagViewModel> LoadOthers(StorageFile file)
         {
             using (var ms = await file.OpenStreamForReadAsync())
@@ -113,7 +105,7 @@ namespace TagEditor.GUI.Models
                 {
                     var result = new TagViewModel();
                     result.Album = new MultiInfo<string>(tags.Album);
-                    result.Artist = new MultiInfo<string>(tags.AlbumArtists.FirstOrDefault());
+                    result.Artist = new MultiInfo<string>(tags.FirstPerformer);
                     result.Title = tags.Title;
                     result.Year = new MultiInfo<uint?>(tags.Year);
                     result.TrackNumber = tags.Track;

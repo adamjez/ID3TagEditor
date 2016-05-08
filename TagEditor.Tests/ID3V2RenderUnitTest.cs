@@ -163,7 +163,7 @@ namespace TagEditor.Tests
 
                 var info = new TagInformation();
 
-                var bitmap = new Bitmap("ImageFiles/Adele.png");
+                var bitmap = new Bitmap("ImageFiles/sample1.png");
                 using(var ms =  new MemoryStream())
                 {
                     var format = ImageFormat.Png;
@@ -182,7 +182,7 @@ namespace TagEditor.Tests
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
-                var bitmap = new Bitmap("ImageFiles/Adele.png");
+                var bitmap = new Bitmap("ImageFiles/sample1.png");
                 using (var ms = new MemoryStream())
                 {
                     var format = ImageFormat.Png;

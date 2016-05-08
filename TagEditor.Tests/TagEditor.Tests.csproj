@@ -68,7 +68,7 @@
     <Content Include="AudioFiles\test1.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ImageFiles\Adele.png">
+    <Content Include="ImageFiles\sample1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

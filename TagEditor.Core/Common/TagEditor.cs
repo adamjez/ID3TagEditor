@@ -15,7 +15,8 @@ namespace TagEditor.Core.Common
 
             if (!await service.ParseHeaderAsync())
             {
-                throw new ArgumentException("File is in invalid format", nameof(file));
+                Debug.WriteLine("File is in invalid format", nameof(file));
+                return null;
             }
             return await service.ParseAsync();
         }
