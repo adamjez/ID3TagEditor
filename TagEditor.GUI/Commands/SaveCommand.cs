@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 using TagEditor.Core.Common;
+using TagEditor.GUI.Models;
 using TagEditor.GUI.ViewModels;
 using TagLib;
+using File = System.IO.File;
 
 namespace TagEditor.GUI.Commands
 {
@@ -23,23 +26,29 @@ namespace TagEditor.GUI.Commands
             ViewModel.IsBusy = true;
 
             var file = await StorageFile.GetFileFromPathAsync(ViewModel.Paths.First());
+
             if (file.FileType == ".mp3")
             {
-                using (var fs = await file.OpenStreamForWriteAsync())
+                await Task.Run(async () =>
                 {
-                    using (var audioFile = new AudioFile(fs))
+                    using (var fs = File.Open(ViewModel.Paths.First(), FileMode.Open))
                     {
-                        var editor = new Core.Common.TagEditor();
+                        using (var audioFile = new AudioFile(fs))
+                        {
+                            var editor = new Core.Common.TagEditor();
 
-                        var information = ViewModel.Tag.ToTagInformation();
+                            var information = ViewModel.Tag.ToTagInformation();
 
-                        //await editor.SetTags(audioFile, information, TagType.ID3v2);
-                        await editor.SetTags(audioFile, information, TagType.ID3v1);
+                            await editor.SetTags(audioFile, information, TagType.ID3v2);
+                            await editor.SetTags(audioFile, information, TagType.ID3v1);
+                        }
                     }
-                }
+                });
+               
             }
             else
             {
+
                 using (var fs = await file.OpenStreamForWriteAsync())
                 {
                     var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fs,fs));
@@ -50,6 +59,10 @@ namespace TagEditor.GUI.Commands
                     tagFile.Dispose();
                 }
             }
+
+            ViewModel.FileInformations.Clear();
+            ViewModel.FileInformations.Add(await FileInformation.Load(file));
+
             ViewModel.IsBusy = false;
         }
     }

@@ -17,11 +17,12 @@ namespace TagEditor.GUI.Models
         private string title;
         private string album;
         private uint? year;
-        private uint? trackNumber;
+        private uint trackNumber;
         private BitmapImage albumArt;
         private string genre;
         private byte[] albumArtContent;
         private string mimeType;
+        private uint trackCount;
 
         public static async Task<TagViewModel> LoadFromFile(StorageFile file)
         {
@@ -39,7 +40,8 @@ namespace TagEditor.GUI.Models
                         Title = info.Title.Content,
                         Album = info.Album.Content,
                         Year = (uint?)info.Year.Content,
-                        TrackNumber = info.TrackNumber.Content,
+                        TrackNumber = info.TrackNumber.Content ?? 0,
+                        TrackCount = info.TrackNumber.TrackCount ?? 0,
                         Genre = info.Genre.Content.ToString()
                     };
 
@@ -80,6 +82,7 @@ namespace TagEditor.GUI.Models
                     result.Title = tags.Title;
                     result.Year = tags.Year;
                     result.TrackNumber = tags.Track;
+                    result.TrackCount = tags.TrackCount;
                     result.Genre = tags.FirstGenre;
 
                     var art = tags.Pictures.FirstOrDefault(pic => pic.Type == TagLib.PictureType.FrontCover);
@@ -102,7 +105,8 @@ namespace TagEditor.GUI.Models
             tag.Performers = new [] { Artist };
             tag.Album = Album;
             tag.Year = Year ?? 0;
-            tag.Track = TrackNumber ?? 0;
+            tag.Track = TrackNumber;
+            tag.TrackCount = TrackCount;
 
             if (AlbumArt != null)
             {
@@ -143,6 +147,7 @@ namespace TagEditor.GUI.Models
             if (TrackNumber != null)
             {
                 info.TrackNumber.SetValue(TrackNumber);
+                info.TrackNumber.TrackCount = TrackCount;
             }
 
             if (AlbumArt != null)
@@ -187,10 +192,16 @@ namespace TagEditor.GUI.Models
             set { SetProperty(ref year, value); }
         }
 
-        public uint? TrackNumber
+        public uint TrackNumber
         {
             get { return trackNumber; }
             set { SetProperty(ref trackNumber, value); }
+        }
+
+        public uint TrackCount
+        {
+            get { return trackCount; }
+            set { SetProperty(ref trackCount, value); }
         }
 
         public BitmapImage AlbumArt

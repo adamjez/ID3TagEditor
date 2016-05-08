@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using TagEditor.Core.Interfaces;
@@ -154,16 +155,22 @@ namespace TagEditor.Core.Common
             var writePosition = start;
 
             var buffer = new byte[] {1};
-            while (buffer.Length != 0)
+            var iterations = 0;
+            var shiftLength = fileStream.Length - start;
+            while (shiftLength > 0)
             {
                 fileStream.Position = readPosition;
-                buffer = Test(bufferSize);
+                buffer = Test((int)Math.Min(shiftLength, bufferSize));
+                shiftLength -= buffer.Length;
                 readPosition += buffer.Length;
 
                 fileStream.Position = writePosition;
                 fileStream.Write(buffer, 0, buffer.Length);
                 writePosition += buffer.Length;
+
+                iterations++;
             }
+            Debug.WriteLine("Iterations: " + iterations);
 
 
             fileStream.SetLength(writePosition);

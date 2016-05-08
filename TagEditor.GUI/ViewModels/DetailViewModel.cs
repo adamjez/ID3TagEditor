@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace TagEditor.GUI.ViewModels
         private string currentFileName;
         private TagViewModel tag;
         private bool moreFiles;
-        private FileInformation fileInformation;
+        private ObservableCollection<FileInformation> fileInformations;
 
         public DetailViewModel()
         {
@@ -24,6 +25,7 @@ namespace TagEditor.GUI.ViewModels
             SaveCommand = new SaveCommand(this);
             RemoveImageCommand = new RelayCommand(() => Tag.AlbumArt = null);
             LoadImageCommand = new LoadImageCommand(this);
+            fileInformations = new ObservableCollection<FileInformation>();
         }
 
         public async Task LoadItem(string[] paths)
@@ -34,11 +36,11 @@ namespace TagEditor.GUI.ViewModels
             moreFiles = paths.Length > 1;
             if (!moreFiles)
             {
-                var currentFile = await StorageFile.GetFileFromPathAsync(paths.First());
+                var currentFile = await StorageFile.GetFileFromPathAsync(paths[0]);
 
                 CurrentFileName = currentFile.DisplayName;
 
-                FileInformation = await FileInformation.Load(currentFile);
+                fileInformations.Add(await FileInformation.Load(currentFile));
 
                 if (currentFile.FileType == ".mp3")
                 {
@@ -47,6 +49,16 @@ namespace TagEditor.GUI.ViewModels
                 else
                 {
                     Tag = await TagViewModel.LoadOthers(currentFile);
+                }
+            }
+            else
+            {
+                CurrentFileName = "Multiple files selected";
+                foreach (var path in paths)
+                {
+                    var currentFile = await StorageFile.GetFileFromPathAsync(path);
+
+                    fileInformations.Add(await FileInformation.Load(currentFile));
                 }
             }
 
@@ -84,10 +96,10 @@ namespace TagEditor.GUI.ViewModels
             set { SetProperty(ref currentFileName, value); }
         }
 
-        public FileInformation FileInformation
+        public ObservableCollection<FileInformation> FileInformations
         {
-            get { return fileInformation; }
-            set { SetProperty(ref fileInformation, value); }
+            get { return fileInformations; }
+            set { SetProperty(ref fileInformations, value); }
         }
     }
 }

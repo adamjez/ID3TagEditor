@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
+    "System.IO.FileSystem.Primitives": "4.0.0",
     "TagLib.Portable": "1.0.4"
   },
   "frameworks": {

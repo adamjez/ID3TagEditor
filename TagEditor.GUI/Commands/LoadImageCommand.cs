@@ -40,7 +40,6 @@ namespace TagEditor.GUI.Commands
                         var content = await stream.ReadBytesAsync((int)stream.Length);
                         await ViewModel.Tag.SetNewImage(content, MimeTypeMap.GetMimeType(file.FileType));
                     }
-
                 }
                 catch (Exception exc)
                 {

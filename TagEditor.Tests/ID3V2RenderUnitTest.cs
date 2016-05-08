@@ -127,6 +127,23 @@ namespace TagEditor.Tests
         }
 
         [TestMethod]
+        public async Task BenchmarkTest()
+        {
+            using (var file = new AudioFile(File.Open("AudioFiles/001-adele-hello.mp3", FileMode.Open)))
+            {
+                var editor = new Core.Common.TagEditor();
+
+                var info = new TagInformation();
+                info.TrackNumber.SetValue(2);
+                info.Title.SetValue("WTF");
+                info.Artist.SetValue("Artist");
+
+
+                await editor.SetTags(file, info, TagType.ID3v2);
+            }
+        }
+
+        [TestMethod]
         public async Task RenderAlbumArtTest()
         {
             using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
