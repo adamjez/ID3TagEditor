@@ -4,6 +4,7 @@ using System.Linq;
 using Windows.Storage;
 using TagEditor.Core.Common;
 using TagEditor.GUI.ViewModels;
+using TagLib;
 
 namespace TagEditor.GUI.Commands
 {
@@ -22,19 +23,33 @@ namespace TagEditor.GUI.Commands
             ViewModel.IsBusy = true;
 
             var file = await StorageFile.GetFileFromPathAsync(ViewModel.Paths.First());
-            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            if (file.FileType == ".mp3")
             {
-                using (var audioFile = new AudioFile(stream.AsStream()))
+                using (var fs = await file.OpenStreamForWriteAsync())
                 {
-                    var editor = new Core.Common.TagEditor();
-                    
-                    var information = ViewModel.Tag.ToTagInformation();
+                    using (var audioFile = new AudioFile(fs))
+                    {
+                        var editor = new Core.Common.TagEditor();
 
-                    await editor.SetTags(audioFile, information, TagType.ID3v2);
-                    await editor.SetTags(audioFile, information, TagType.ID3v1);
+                        var information = ViewModel.Tag.ToTagInformation();
+
+                        //await editor.SetTags(audioFile, information, TagType.ID3v2);
+                        await editor.SetTags(audioFile, information, TagType.ID3v1);
+                    }
                 }
             }
+            else
+            {
+                using (var fs = await file.OpenStreamForWriteAsync())
+                {
+                    var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fs,fs));
 
+                    ViewModel.Tag.ToTag(tagFile.Tag);
+
+                    tagFile.Save();
+                    tagFile.Dispose();
+                }
+            }
             ViewModel.IsBusy = false;
         }
     }

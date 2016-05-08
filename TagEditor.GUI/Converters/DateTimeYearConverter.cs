@@ -10,7 +10,7 @@ namespace TagEditor.GUI.Converters
             var year = (uint?)value;
             if (year != null)
             {
-                return new DateTimeOffset(new DateTime((int)year,0,0));
+                return new DateTimeOffset(new DateTime((int)year,1,1));
             }
 
             return new DateTimeOffset();

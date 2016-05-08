@@ -20,8 +20,8 @@ namespace TagEditor.GUI.Models
         private uint? trackNumber;
         private BitmapImage albumArt;
         private string genre;
-        private byte[] AlbumArtContent;
-        private string MimeType;
+        private byte[] albumArtContent;
+        private string mimeType;
 
         public static async Task<TagViewModel> LoadFromFile(StorageFile file)
         {
@@ -95,6 +95,27 @@ namespace TagEditor.GUI.Models
             return new TagViewModel();
         }
 
+        public void ToTag(Tag tag)
+        {
+            tag.Title = Title;
+            //tag.AlbumArtists = this.AlbumArtist.Split(';').Select(x => x.Trim()).ToArray();
+            tag.Performers = new [] { Artist };
+            tag.Album = Album;
+            tag.Year = Year ?? 0;
+            tag.Track = TrackNumber ?? 0;
+
+            if (AlbumArt != null)
+            {
+                IPicture newArt = new Picture(
+                    ByteVector.FromStream(
+                        new MemoryStream(albumArtContent)));
+                newArt.Type = (TagLib.PictureType)PictureType.FrontCover;
+                newArt.MimeType = mimeType;
+                // IPicture newArt = this.Picture;
+                tag.Pictures = new [] { newArt };
+            }
+        }
+
         public TagInformation ToTagInformation()
         {
             var info = new TagInformation();
@@ -127,8 +148,8 @@ namespace TagEditor.GUI.Models
             if (AlbumArt != null)
             {
                 info.AlbumArt.Type = PictureType.FrontCover;
-                info.AlbumArt.MimeType = MimeType;
-                info.AlbumArt.SetValue(AlbumArtContent);
+                info.AlbumArt.MimeType = mimeType;
+                info.AlbumArt.SetValue(albumArtContent);
             }
 
             return info;
@@ -137,8 +158,8 @@ namespace TagEditor.GUI.Models
 
         public async Task SetNewImage(byte[] content, string mimeType)
         {
-            AlbumArtContent = content;
-            MimeType = mimeType;
+            albumArtContent = content;
+            this.mimeType = mimeType;
             AlbumArt = await content.ToImage();
         }
 

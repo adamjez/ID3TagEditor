@@ -37,6 +37,26 @@ namespace TagEditor.Core.ID3v2.Frame.Types
             return encoder;
         }
 
+        protected string ParseString(byte[] byteArray, Encoding encoder)
+        {
+            var content = encoder.GetString(byteArray);
+
+            // Unicode strings must begin with the Unicode BOM 
+            // ($FF FE or $FE FF) to identify the byte order.
+            if (content.Length != 0 && (content[0] == 0xfffe || content[0] == 0xfeff))
+            {
+                content = content.Substring(1);
+            }
+
+            var nullIndex = content.IndexOf('\x00');
+            if (nullIndex >= 0)
+            {
+                content = content.Substring(0, nullIndex);
+            }
+
+            return content;
+        }
+
         protected string ParseText(byte[] bytes)
         {
             return Encoding.GetEncoding(baseCoding).GetString(bytes);

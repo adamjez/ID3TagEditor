@@ -50,7 +50,7 @@ namespace TagEditor.Core.ID3v2
                 extendedHeader = await ExtendedHeader.Parse(extendedBytes);
 
                 // TODO: do something with extended header content
-                await File.ReadNextAsync(extendedHeader.Size);
+                await File.ReadNextAsync((int)extendedHeader.Size);
                 currentPosition = 10 + extendedHeader.Size;
             }
 

@@ -40,9 +40,9 @@ namespace TagEditor.Core.ID3v2.Frame.Types
             var buffer = bytes.SubArray(pos);
 
             var delimiter = encoder.GetDelimiter();
-            var index = buffer.IndexOf(delimiter);
+            var index = buffer.IndexOf(delimiter) + delimiter.Length - 1;
 
-            Description = encoder.GetString(buffer.SubArray(0, index));
+            Description = ParseString(buffer.SubArray(0, index), encoder);
 
             Image = buffer.SubArray(index + delimiter.Length);
         }

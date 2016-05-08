@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TagEditor.Core.Common;
 using TagEditor.Core.ID3v1;
 using TagEditor.Core.ID3v2.Frame.Types;
@@ -27,7 +28,10 @@ namespace TagEditor.Core.ID3v2
                     tag.Year.SetValue(Int32.Parse(((TextFrame)frame).Content));
                     break;
                 case FrameType.TRCK:
-                    tag.TrackNumber.SetValue(UInt32.Parse(((TextFrame)frame).Content));
+                    var trackStrings = ((TextFrame) frame).Content.Split('/');
+                    tag.TrackNumber.SetValue(UInt32.Parse(trackStrings[0]));
+                    if(trackStrings.Count() > 1)
+                        tag.TrackNumber.TrackCount = UInt32.Parse(trackStrings[1]);
                     break;
                 case FrameType.TCON:
                     tag.Genre.SetValue(((GenreFrame)frame).GenreType);

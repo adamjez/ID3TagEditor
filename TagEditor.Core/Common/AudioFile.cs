@@ -8,7 +8,7 @@ namespace TagEditor.Core.Common
     public class AudioFile : IFile, IDisposable
     {
         private Stream fileStream;
-        private static int bufferSize = 1024;
+        private static int bufferSize = 2048;
 
         public AudioFile(Stream filestream, bool readOnly = false)
         {
@@ -65,7 +65,7 @@ namespace TagEditor.Core.Common
                     readPosition += bufferSize - remains;
                     fileStream.Position = readPosition;
 
-                    var buffer = await ReadNextAsync((uint)remains);
+                    var buffer = await ReadNextAsync((int)remains);
                     readPosition -= buffer.Length;
 
                     writePosition += bufferSize - remains;
@@ -115,14 +115,24 @@ namespace TagEditor.Core.Common
             return content;
         }
 
-        public async Task<byte[]> ReadNextAsync(uint nBytes)
+        public async Task<byte[]> ReadNextAsync(int length)
         {
-            if (fileStream.Length < nBytes + fileStream.Position)
-                throw new ArgumentOutOfRangeException(nameof(nBytes));
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
 
-            var content = new byte[nBytes];
+            if (length == 0)
+                return new byte[0];
 
-            await fileStream.ReadAsync(content, 0, (int)nBytes);
+            var content = new byte[length];
+
+            int count = 0, read = 0, needed = length;
+            do
+            {
+                count = await fileStream.ReadAsync(content, read, needed);
+
+                read += count;
+                needed -= count;
+            } while (needed > 0 && count != 0);
 
             return content;
         }
@@ -143,25 +153,42 @@ namespace TagEditor.Core.Common
             var readPosition = start + length;
             var writePosition = start;
 
-            while (readPosition < fileStream.Length)
+            var buffer = new byte[] {1};
+            while (buffer.Length != 0)
             {
-                var canRead = bufferSize;
-                if (readPosition + canRead > fileStream.Length)
-                {
-                    canRead = (int)(fileStream.Length - readPosition);
-                }
-
                 fileStream.Position = readPosition;
-                var buffer = await ReadNextAsync((uint)canRead);
+                buffer = Test(bufferSize);
                 readPosition += buffer.Length;
 
                 fileStream.Position = writePosition;
-                await WriteAsync(buffer);
+                fileStream.Write(buffer, 0, buffer.Length);
                 writePosition += buffer.Length;
             }
 
 
             fileStream.SetLength(writePosition);
+        }
+
+        public byte[] Test(int length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            if (length == 0)
+                return new byte[0];
+
+            var content = new byte[length];
+
+            int count = 0, read = 0, needed = length;
+            do
+            {
+                count = fileStream.Read(content, read, needed);
+
+                read += count;
+                needed -= count;
+            } while (needed > 0 && count != 0);
+
+            return content;
         }
 
         public void Dispose()

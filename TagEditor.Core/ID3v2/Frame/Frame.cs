@@ -58,7 +58,7 @@ namespace TagEditor.Core.ID3v2.Frame
                 Debug.WriteLine("Unknown frame type with FrameID: " + frame.Header.FrameID);
                 frame.Base = new IgnoreFrame(FrameType.UNKNOWN);
             }
-            frame.Base.Parse(await file.ReadNextAsync(frame.Header.Size));
+            frame.Base.Parse(await file.ReadNextAsync((int)frame.Header.Size));
 
             return frame;
         }

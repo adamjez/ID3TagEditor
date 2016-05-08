@@ -10,6 +10,8 @@ namespace TagEditor.Core.ID3v1
             : base(numberOfBytes)
         {   }
 
+        public uint? TrackCount { get; set; }
+
         public override void Parse(byte[] content)
         {
             SetValue(content.Length == 0
