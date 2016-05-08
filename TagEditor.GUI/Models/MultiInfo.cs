@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using TagEditor.GUI.ViewModels;
 
@@ -11,6 +12,7 @@ namespace TagEditor.GUI.Models
         private T content;
         private ObservableCollection<T> sourceItems;
         private bool isEdited;
+        private bool multipleContent;
 
         public MultiInfo(T item)
             : this()
@@ -30,7 +32,11 @@ namespace TagEditor.GUI.Models
             SourceItems = new ObservableCollection<T>();
         }
 
-        public bool MultipleContent => SourceItems.Count > 1;
+        public bool MultipleContent
+        {
+            get { return multipleContent; }
+            set { SetProperty(ref multipleContent, value); ; }
+        }
 
         public bool IsEdited
         {
@@ -56,6 +62,17 @@ namespace TagEditor.GUI.Models
             {
                 SourceItems.Add(item);
             }
+
+            if (SourceItems.Count > 1)
+            {
+                MultipleContent = true;
+            }
+        }
+
+        public void ClearItems()
+        {
+            SourceItems.Clear();
+            MultipleContent = false;
         }
 
         public MultiInfo<T> Prepare()

@@ -14,6 +14,7 @@ namespace TagEditor.GUI.Commands
         public override void Execute(object parameter)
         {
             ViewModel.Tag.AlbumArt.Content = new ImageTag();
+            ViewModel.Tag.AlbumArt.ClearItems();
         }
     }
 }

@@ -32,7 +32,8 @@ namespace TagEditor.GUI.Commands
                 var file = await StorageFile.GetFileFromPathAsync(path);
                 using (var audioFile = new AudioFile(await file.OpenStreamForWriteAsync()))
                 {
-                    var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2);
+                    var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2)
+                        ?? new TagInformation();
 
                     info.Album.SetValue(Set(info.Album.Content, ViewModel.Tag.Album));
                     info.Artist.SetValue(Set(info.Artist.Content, ViewModel.Tag.Artist));
