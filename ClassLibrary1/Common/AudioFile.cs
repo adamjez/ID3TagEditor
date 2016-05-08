@@ -9,7 +9,7 @@ namespace TagEditor.Core.Common
     public class AudioFile : IFile, IDisposable
     {
         private Stream fileStream;
-        private static int bufferSize = 2048;
+        private static int bufferSize = 65536;
 
         public AudioFile(Stream filestream, bool readOnly = false)
         {

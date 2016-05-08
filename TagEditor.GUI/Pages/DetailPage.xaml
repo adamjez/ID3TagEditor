@@ -80,7 +80,7 @@
                           IsItemClickEnabled="False">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Grid.Row="1">
+                            <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="6">
                                     <TextBlock Text="File Format: " FontSize="20"/>
                                     <TextBlock Text="{Binding Format}" FontSize="20" Margin="8,0,0,0"/>

@@ -40,7 +40,7 @@ namespace TagEditor.Core.ID3v2.Frame.Types
             var buffer = bytes.SubArray(pos);
 
             var delimiter = encoder.GetDelimiter();
-            var index = buffer.IndexOf(delimiter) + delimiter.Length - 1;
+            var index = buffer.IndexOf(delimiter) ;
 
             Description = ParseString(buffer.SubArray(0, index), encoder);
 
