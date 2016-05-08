@@ -1,110 +1,36 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using TagEditor.Core.Common;
 using TagEditor.GUI.Utility;
 using TagEditor.GUI.ViewModels;
 using TagLib;
+using File = TagLib.File;
 using PictureType = TagEditor.Core.ID3v2.Frame.Types.PictureType;
 
 namespace TagEditor.GUI.Models
 {
     public class TagViewModel : NotificationBase
     {
-        private string artist;
+        private MultiInfo<string> artist;
         private string title;
-        private string album;
-        private uint? year;
+        private MultiInfo<string> album;
+        private MultiInfo<uint?> year;
         private uint trackNumber;
-        private BitmapImage albumArt;
-        private string genre;
+        private MultiInfo<BitmapImage> albumArt;
+        private MultiInfo<string> genre;
         private byte[] albumArtContent;
         private string mimeType;
         private uint trackCount;
-
-        public static async Task<TagViewModel> LoadFromFile(StorageFile file)
-        {
-            using (var audioFile = new AudioFile(await file.OpenStreamForReadAsync(), true))
-            {
-                var editor = new Core.Common.TagEditor();
-
-                var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2);
-
-                if (info != null)
-                {
-                    var tag = new TagViewModel()
-                    {
-                        Artist = info.Artist.Content,
-                        Title = info.Title.Content,
-                        Album = info.Album.Content,
-                        Year = (uint?)info.Year.Content,
-                        TrackNumber = info.TrackNumber.Content ?? 0,
-                        TrackCount = info.TrackNumber.TrackCount ?? 0,
-                        Genre = info.Genre.Content.ToString()
-                    };
-
-                    if (info.AlbumArt.Content != null)
-                    {
-                        await tag.SetNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
-                    }
-
-                    return tag;
-                }
-            }
-
-            return new TagViewModel();
-        }
-
-        public static async Task<TagViewModel> LoadOthers(StorageFile file)
-        {
-            using (var ms = await file.OpenStreamForReadAsync())
-            {
-
-                var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, ms, ms));
-
-                Tag tags = null;
-                if (file.FileType == ".flac")
-                {
-                    tags = tagFile.GetTag(TagTypes.FlacMetadata);
-                }
-                else if (file.FileType == ".m4a")
-                {
-                    tags = tagFile.GetTag(TagTypes.Apple);
-                }
-
-                if (tags != null)
-                {
-                    var result = new TagViewModel();
-                    result.Album = tags.Album;
-                    result.Artist = tags.AlbumArtists.FirstOrDefault();
-                    result.Title = tags.Title;
-                    result.Year = tags.Year;
-                    result.TrackNumber = tags.Track;
-                    result.TrackCount = tags.TrackCount;
-                    result.Genre = tags.FirstGenre;
-
-                    var art = tags.Pictures.FirstOrDefault(pic => pic.Type == TagLib.PictureType.FrontCover);
-                    if (art != null)
-                    {
-                        await result.SetNewImage(art.Data.Data, art.MimeType);
-                    }
-
-                    return result;
-                }
-            }
-
-            return new TagViewModel();
-        }
 
         public void ToTag(Tag tag)
         {
             tag.Title = Title;
             //tag.AlbumArtists = this.AlbumArtist.Split(';').Select(x => x.Trim()).ToArray();
-            tag.Performers = new [] { Artist };
-            tag.Album = Album;
-            tag.Year = Year ?? 0;
+            tag.Performers = new [] { Artist.Content };
+            tag.Album = Album.Content;
+            tag.Year = Year.Content ?? 0;
             tag.Track = TrackNumber;
             tag.TrackCount = TrackCount;
 
@@ -124,14 +50,14 @@ namespace TagEditor.GUI.Models
         {
             var info = new TagInformation();
 
-            if (!string.IsNullOrEmpty(Album))
+            if (!string.IsNullOrEmpty(Album.Content))
             {
-                info.Album.SetValue(Album);
+                info.Album.SetValue(Album.Content);
             }
 
-            if (!string.IsNullOrEmpty(Artist))
+            if (!string.IsNullOrEmpty(Artist.Content))
             {
-                info.Artist.SetValue(Artist);
+                info.Artist.SetValue(Artist.Content);
             }
 
             if (!string.IsNullOrEmpty(Title))
@@ -141,13 +67,15 @@ namespace TagEditor.GUI.Models
 
             if (Year != null)
             {
-                info.Year.SetValue((int?)Year);
+                info.Year.SetValue((int?)Year.Content);
             }
 
-            if (TrackNumber != null)
+            info.TrackNumber.SetValue(TrackNumber);
+            info.TrackNumber.TrackCount = TrackCount;
+
+            if (!string.IsNullOrEmpty(Genre.Content))
             {
-                info.TrackNumber.SetValue(TrackNumber);
-                info.TrackNumber.TrackCount = TrackCount;
+                info.Genre.Type = Genre.Content;
             }
 
             if (AlbumArt != null)
@@ -165,10 +93,10 @@ namespace TagEditor.GUI.Models
         {
             albumArtContent = content;
             this.mimeType = mimeType;
-            AlbumArt = await content.ToImage();
+            AlbumArt = new MultiInfo<BitmapImage>(await content.ToImage());
         }
 
-        public string Artist
+        public MultiInfo<string> Artist
         {
             get { return artist; }
             set { SetProperty(ref artist, value); }
@@ -180,13 +108,13 @@ namespace TagEditor.GUI.Models
             set { SetProperty(ref title, value); }
         }
 
-        public string Album
+        public MultiInfo<string> Album
         {
             get { return album; }
             set { SetProperty(ref album, value); }
         }
 
-        public uint? Year
+        public MultiInfo<uint?> Year
         {
             get { return year; }
             set { SetProperty(ref year, value); }
@@ -204,13 +132,13 @@ namespace TagEditor.GUI.Models
             set { SetProperty(ref trackCount, value); }
         }
 
-        public BitmapImage AlbumArt
+        public MultiInfo<BitmapImage> AlbumArt
         {
             get { return albumArt; }
             set { SetProperty(ref albumArt, value); }
         }
 
-        public string Genre
+        public MultiInfo<string> Genre
         {
             get { return genre; }
             set { SetProperty(ref genre, value); }

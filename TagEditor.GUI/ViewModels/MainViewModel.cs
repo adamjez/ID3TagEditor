@@ -20,34 +20,6 @@ namespace TagEditor.GUI.ViewModels
         public MainViewModel()
         {
             FileItems = new ObservableRangeCollection<GridItem>();
-            TestCommand = new RelayCommand(Test);
-        }
-
-        public async void Test()
-        {
-            IsBusy = true;
-            await Task.Run(async () =>
-            {
-                var file = await StorageFile.GetFileFromPathAsync(@"D:\Music\001-adele-hello.mp3");
-
-                using (var fs = await file.OpenStreamForWriteAsync())
-                {
-                    using (var audioFile = new AudioFile(fs))
-                    {
-                        var editor = new Core.Common.TagEditor();
-
-                        var info = new TagInformation();
-                        info.TrackNumber.SetValue(2);
-                        info.Title.SetValue("WTF");
-                        info.Artist.SetValue("Artist");
-
-
-                        await editor.SetTags(audioFile, info, TagType.ID3v2);
-                    }
-                }
-            });
-            IsBusy = false;
-
         }
 
         public async Task LoadItems(string path)

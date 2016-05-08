@@ -1,11 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
-using TagEditor.Core.Common;
 using TagEditor.GUI.Commands;
 using TagEditor.GUI.Models;
 
@@ -44,11 +41,11 @@ namespace TagEditor.GUI.ViewModels
 
                 if (currentFile.FileType == ".mp3")
                 {
-                    Tag = await TagViewModel.LoadFromFile(currentFile);
+                    Tag = await TagCreator.LoadFromFile(currentFile);
                 }
                 else
                 {
-                    Tag = await TagViewModel.LoadOthers(currentFile);
+                    Tag = await TagCreator.LoadOthers(currentFile);
                 }
             }
             else

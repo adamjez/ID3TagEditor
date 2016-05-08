@@ -30,7 +30,7 @@
                     <TextBlock Text="Album Art" FontSize="30"></TextBlock>
                     <Grid Background="{StaticResource AppBarBackgroundThemeBrush}" Height="256" Width="256"
                           HorizontalAlignment="Left">
-                        <Image Source="{Binding Tag.AlbumArt}"  Stretch="Uniform"/>
+                        <Image Source="{Binding Tag.AlbumArt.Content}"  Stretch="Uniform"/>
                     </Grid>
                     <Button Content="Load from File" Command="{Binding Path=LoadImageCommand}"  Width="242" Margin="6"/>
                     <Button Content="Remove album art" Command="{Binding Path=RemoveImageCommand}" Width="242" Margin="6"/>
@@ -48,9 +48,18 @@
                     <TextBox Header="Song Title" Text="{Binding Tag.Title, Mode=TwoWay}" 
                              Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"></TextBox>
 
-                    <TextBox Header="Artist" Text="{Binding Tag.Artist, Mode=TwoWay}"></TextBox>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox MinWidth="50" IsChecked="{Binding Tag.Artist.IsEdited}"
+                                  Visibility="{Binding Tag.Artist.MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBox Grid.Column="1" Header="Artist" Text="{Binding Tag.Artist.Content, Mode=TwoWay}"
+                                 IsEnabled="{Binding Tag.Artist.IsEdited}"></TextBox>
+                    </Grid>
 
-                    <TextBox Header="Album" Text="{Binding Tag.Album, Mode=TwoWay}"></TextBox>
+                    <TextBox Header="Album" Text="{Binding Tag.Album.Content, Mode=TwoWay}"></TextBox>
 
                     <Grid Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}">
                         <Grid.ColumnDefinitions>
@@ -64,9 +73,9 @@
                     </Grid>
 
                     <DatePicker Header="Year" MonthVisible="False" DayVisible="False" 
-                                Date="{Binding Tag.Year, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"/>
+                                Date="{Binding Tag.Year.Content, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"/>
 
-                    <TextBox Header="Genre" Text="{Binding Tag.Genre, Mode=TwoWay}"></TextBox>
+                    <TextBox Header="Genre" Text="{Binding Tag.Genre.Content, Mode=TwoWay}"></TextBox>
                 </StackPanel>
             </Grid>
 
@@ -80,7 +89,7 @@
                           IsItemClickEnabled="False">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
+                            <StackPanel Margin="0,4,0,4">
                                 <StackPanel Orientation="Horizontal" Margin="6">
                                     <TextBlock Text="File Format: " FontSize="20"/>
                                     <TextBlock Text="{Binding Format}" FontSize="20" Margin="8,0,0,0"/>

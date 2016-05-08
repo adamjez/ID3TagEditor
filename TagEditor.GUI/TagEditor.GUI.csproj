@@ -107,6 +107,8 @@
     <Compile Include="Models\FileItem.cs" />
     <Compile Include="Models\FolderItem.cs" />
     <Compile Include="Models\GridItem.cs" />
+    <Compile Include="Models\MultiInfo.cs" />
+    <Compile Include="Models\TagCreator.cs" />
     <Compile Include="Models\TagViewModel.cs" />
     <Compile Include="Pages\DetailPage.xaml.cs">
       <DependentUpon>DetailPage.xaml</DependentUpon>
@@ -171,9 +173,9 @@
     <Folder Include="Common\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\ClassLibrary1.csproj">
-      <Project>{93e35cb4-3947-4895-a3f6-d91a92d05775}</Project>
-      <Name>ClassLibrary1</Name>
+    <ProjectReference Include="..\TagEditor.Core\TagEditor.Core.csproj">
+      <Project>{3e9e6f4c-2893-4148-8424-f1d15e806e8e}</Project>
+      <Name>TagEditor.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

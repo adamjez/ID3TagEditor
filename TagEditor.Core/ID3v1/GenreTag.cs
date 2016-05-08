@@ -5,6 +5,22 @@ namespace TagEditor.Core.ID3v1
 {
     public class GenreTag : BasicTag<Genre.Type>
     {
+        private string type;
+
+        public string Type
+        {
+            get { return type; }
+            set
+            {
+                try
+                {
+                    Content = Genre.FromString(value);
+                }
+                catch { }
+                type = value;
+            }
+        }
+
         public GenreTag()
             : base(1)
         {

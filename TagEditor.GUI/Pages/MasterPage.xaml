@@ -45,7 +45,6 @@
         </GridView>
         <ProgressRing Grid.Row="1" IsActive="{Binding IsBusy}" Width="100" Height="100"/>
         <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
-            <AppBarButton Icon="Save" Label="Test" Command="{Binding TestCommand}"/>
             <AppBarButton Icon="Edit" Label="Edit" x:Name="EditButton" Visibility="Collapsed" Click="EditButton_OnClick"/>
             <AppBarToggleButton Icon="SelectAll" Label="Select Multiple" Click="SelectButton_OnClick"/>
             <AppBarButton Icon="OpenFile" Label="Load Audio File" Click="ButtonBase_OnClick"/>

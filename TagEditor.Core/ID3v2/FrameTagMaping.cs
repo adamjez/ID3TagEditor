@@ -35,6 +35,7 @@ namespace TagEditor.Core.ID3v2
                     break;
                 case FrameType.TCON:
                     tag.Genre.SetValue(((GenreFrame)frame).GenreType);
+                    tag.Genre.Type = ((GenreFrame)frame).Content;
                     break;
                 case FrameType.COMM:
                     tag.Comment.SetValue(((CommentFrame)frame).Content);
@@ -64,18 +65,26 @@ namespace TagEditor.Core.ID3v2
                     Content = tag.Year.Content.Value.ToString()
                 });
             }
-            if (tag.TrackNumber.Content.HasValue)
+            if (tag.TrackNumber.Content > 0)
             {
+                var track = tag.TrackNumber.Content.ToString();
+
+                if (tag.TrackNumber.TrackCount > 0)
+                {
+                    track += "/" + tag.TrackNumber.TrackCount;
+                }
+
                 frames.Add(new TextFrame(FrameType.TRCK)
                 {
-                    Content = tag.TrackNumber.Content.Value.ToString()
+                    Content = track
                 });
             }
-            if (tag.Genre.Content != Genre.Type.None)
+            if (tag.Genre.Content != Genre.Type.None || !string.IsNullOrEmpty(tag.Genre.Type))
             {
                 frames.Add(new GenreFrame()
                 {
-                    GenreType = tag.Genre.Content
+                    GenreType = tag.Genre.Content,
+                    Content = tag.Genre.Type
                 });
             }
 

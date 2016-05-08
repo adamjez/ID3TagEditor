@@ -93,15 +93,25 @@ namespace TagEditor.Core.ID3v2
             var framesRendered = frames.Select(baseFrame => new Frame.Frame(baseFrame).Render())
                 .Combine();
 
+            // Padding for big speedup
+            var padding = (framesRendered.Length < header.Size) ? (header.Size - framesRendered.Length) : 0;
+
             var headerBytes = new Header
             {
-                Size = (uint)framesRendered.Length,
+                Size = (uint)(framesRendered.Length + padding),
                 MajorVersion = supportedMajorVersion
             }.Render();
 
-            var buffer = new byte[10 + framesRendered.Length];
+            var buffer = new byte[10 + framesRendered.Length + padding];
             Buffer.BlockCopy(headerBytes, 0, buffer, 0, 10);
             Buffer.BlockCopy(framesRendered, 0, buffer, 10, framesRendered.Length);
+
+            if (padding > 0)
+            {
+                Array.Clear(buffer, framesRendered.Length + 10, (int)padding);
+            }
+
+
 
             await File.WriteAtBeginningAsync(buffer, replace);
         }
