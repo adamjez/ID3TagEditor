@@ -130,7 +130,7 @@ namespace TagEditor.GUI.Pages
             if (this.GridView.SelectedItems.Count > 0)
             {
                 var files = GridView.SelectedItems.Select(item => item as FileItem).ToList();
-                if (files.Any(file => file == null))
+                if (files.Any(file => file == null || file.File.FileType != ".mp3"))
                     return;
 
                 var paths = string.Join(";", files.Select(file => file.File.Path));

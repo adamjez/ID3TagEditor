@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\LoadImageCommand.cs" />
+    <Compile Include="Commands\MultipleSaveCommand.cs" />
     <Compile Include="Commands\PlayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Converters\BoolToOpacityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeYearConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Models\FileInformation.cs" />
     <Compile Include="Models\FileItem.cs" />
     <Compile Include="Models\FolderItem.cs" />

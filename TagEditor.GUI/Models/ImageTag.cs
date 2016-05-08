@@ -5,25 +5,22 @@ using TagEditor.GUI.ViewModels;
 
 namespace TagEditor.GUI.Models
 {
-    public class ImageTag : NotificationBase
+    public class ImageTag 
     {
-        private BitmapImage image;
-
-        public BitmapImage Image
-        {
-            get { return image; }
-            private set { SetProperty(ref image, value); }
-        }
+        public BitmapImage Image { get; set; }
 
         public string MimeType { get; private set; }
 
         public byte[] Content { get; private set; }
 
-        public async Task SetNewImage(byte[] content, string mimeType)
+        public static async Task<ImageTag> CreateNewImage(byte[] content, string mimeType)
         {
-            this.Content = content;
-            this.MimeType = mimeType;
-            Image = await content.ToImage();
+            return new ImageTag()
+            {
+                Content = content,
+                MimeType = mimeType,
+                Image = await content.ToImage(),
+            };
         }
     }
 }

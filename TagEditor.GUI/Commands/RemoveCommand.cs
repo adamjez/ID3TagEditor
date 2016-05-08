@@ -30,6 +30,7 @@ namespace TagEditor.GUI.Commands
                         await editor.RemoveTags(audioFile, TagType.ID3v2);
                     }
                 }
+                await ViewModel.LoadItem(ViewModel.Paths);
             }
         }
     }

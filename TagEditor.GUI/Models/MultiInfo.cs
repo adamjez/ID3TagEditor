@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TagEditor.GUI.ViewModels;
@@ -48,12 +49,23 @@ namespace TagEditor.GUI.Models
             private set { SetProperty(ref sourceItems, value); }
         }
 
-        public void AddUniqueToItems(T item)
+        public void AddUniqueToItems(T item, Func<T, T, Boolean> compare = null)
         {
-            if (sourceItems.All(sourceItem => !sourceItem.Equals(item)))
+            if (sourceItems.All(sourceItem => !(compare?.Invoke(item, sourceItem) ?? sourceItem.Equals(item))))
             {
                 SourceItems.Add(item);
             }
+        }
+
+        public MultiInfo<T> Prepare()
+        {
+            if (sourceItems.Count() == 1)
+            {
+                Content = sourceItems.First();
+                IsEdited = true;
+            }
+
+            return this;
         }
     }
 }

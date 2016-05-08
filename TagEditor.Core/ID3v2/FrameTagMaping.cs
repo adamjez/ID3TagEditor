@@ -20,6 +20,9 @@ namespace TagEditor.Core.ID3v2
                 case FrameType.TOPE:
                     tag.Artist.SetValue(((TextFrame)frame).Content);
                     break;
+                case FrameType.TPE2:
+                    tag.AlbumArtist.SetValue(((TextFrame)frame).Content);
+                    break;
                 case FrameType.TOAL:
                 case FrameType.TALB:
                     tag.Album.SetValue(((TextFrame)frame).Content);
@@ -56,6 +59,7 @@ namespace TagEditor.Core.ID3v2
 
             AddTextToBaseFrame(frames, FrameType.TIT2, tag.Title.Content);
             AddTextToBaseFrame(frames, FrameType.TPE1, tag.Artist.Content);
+            AddTextToBaseFrame(frames, FrameType.TPE2, tag.AlbumArtist.Content);
             AddTextToBaseFrame(frames, FrameType.TALB, tag.Album.Content);
 
             if (tag.Year.Content.HasValue)

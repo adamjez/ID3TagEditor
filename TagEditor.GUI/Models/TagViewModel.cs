@@ -19,6 +19,7 @@ namespace TagEditor.GUI.Models
         private MultiInfo<ImageTag> albumArt;
         private MultiInfo<string> genre;
         private uint trackCount;
+        private MultiInfo<string> albumArtist;
 
         public TagViewModel()
         {
@@ -34,6 +35,7 @@ namespace TagEditor.GUI.Models
             tag.Year = Year.Content ?? 0;
             tag.Track = TrackNumber;
             tag.TrackCount = TrackCount;
+            tag.AlbumArtists = new[] {AlbumArtist.Content};
 
             if (AlbumArt != null)
             {
@@ -54,6 +56,11 @@ namespace TagEditor.GUI.Models
             if (!string.IsNullOrEmpty(Album.Content))
             {
                 info.Album.SetValue(Album.Content);
+            }
+
+            if (!string.IsNullOrEmpty(AlbumArtist.Content))
+            {
+                info.AlbumArtist.SetValue(AlbumArtist.Content);
             }
 
             if (!string.IsNullOrEmpty(Artist.Content))
@@ -106,6 +113,12 @@ namespace TagEditor.GUI.Models
         {
             get { return album; }
             set { SetProperty(ref album, value); }
+        }
+
+        public MultiInfo<string> AlbumArtist
+        {
+            get { return albumArtist; }
+            set { SetProperty(ref albumArtist, value); }
         }
 
         public MultiInfo<uint?> Year

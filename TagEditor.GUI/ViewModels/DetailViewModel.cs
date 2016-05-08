@@ -25,6 +25,8 @@ namespace TagEditor.GUI.ViewModels
             RemoveImageCommand = new RelayCommand(() => Tag.AlbumArt = null);
             LoadImageCommand = new LoadImageCommand(this);
             fileInformations = new ObservableCollection<FileInformation>();
+            RemoveCommand = new RemoveCommand(this);
+            MultipleSaveCommand = new MultipleSaveCommand(this);
         }
 
         public async Task LoadItem(string[] paths)
@@ -32,8 +34,8 @@ namespace TagEditor.GUI.ViewModels
             IsBusy = true;
 
             Paths = paths;
-            moreFiles = paths.Length > 1;
-            if (!moreFiles)
+            MoreFiles = paths.Length > 1;
+            if (!MoreFiles)
             {
                 var currentFile = await StorageFile.GetFileFromPathAsync(paths[0]);
 
@@ -67,7 +69,6 @@ namespace TagEditor.GUI.ViewModels
                     Tag = await TagCreator.LoadFromFiles(files);
                 }
             }
-
             IsBusy = false;
         }
 
@@ -76,6 +77,7 @@ namespace TagEditor.GUI.ViewModels
         public ICommand PlayCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand RemoveCommand { get; private set; }
+        public ICommand MultipleSaveCommand { get; private set; }
 
         public string[] Paths { get; set; }
 

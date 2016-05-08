@@ -33,8 +33,8 @@ namespace TagEditor.GUI.Models
 
                     if (info.AlbumArt.Content != null)
                     {
-                        tag.AlbumArt.Content = new ImageTag();
-                        await tag.AlbumArt.Content.SetNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
+                        tag.AlbumArt.Content = 
+                            await ImageTag.CreateNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
                     }
 
                     return tag;
@@ -59,30 +59,40 @@ namespace TagEditor.GUI.Models
                 {
                     var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2);
 
-                    AddIfNotEmpty(info.Album.Content, albums);
-                    AddIfNotEmpty(info.Artist.Content, artists);
-                    AddIfNotEmpty(info.Genre.Type, genres);
+                    albums.AddUniqueToItems(info.Album.Content);
+                    artists.AddUniqueToItems(info.Artist.Content);
+                    genres.AddUniqueToItems(info.Genre.Type);
 
-                    if (info.Year.Content != null && info.Year.Content > 0)
-                    {
-                        years.SourceItems.Add((uint?)info.Year.Content);
-                    }
+                    years.AddUniqueToItems((uint?)info.Year.Content);
 
-                    if (info.AlbumArt.Content != null)
-                    {
-                        var albumArt = new ImageTag();
-                        await albumArt.SetNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
-                        albumArts.SourceItems.Add(albumArt);
-                    }
+                    var albumArt = await ImageTag.CreateNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
+                    albumArts.AddUniqueToItems(albumArt,
+                        (tag1, tag2) => tag1.MimeType == tag2.MimeType && tag1.Content.SequenceEqual(tag2.Content));
+                    //AddIfNotEmpty(info.Album.Content, albums);
+                    //AddIfNotEmpty(info.Artist.Content, artists);
+                    //AddIfNotEmpty(info.Genre.Type, genres);
+
+                    //if (info.Year.Content != null && info.Year.Content > 0)
+                    //{
+                    //    years.AddUniqueToItems((uint?)info.Year.Content);
+                    //}
+
+                    //if (info.AlbumArt.Content != null)
+                    //{
+                    //    var albumArt = await ImageTag.CreateNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
+                    //    albumArts.AddUniqueToItems(albumArt, 
+                    //        (tag1 ,tag2) => tag1.MimeType == tag2.MimeType && tag1.Content.SequenceEqual(tag2.Content));
+                    //}
                 }
             }
 
             return new TagViewModel
             {
-                AlbumArt = albumArts,
-                Artist = artists,
-                Genre = genres,
-                Year = years
+                AlbumArt = albumArts.Prepare(),
+                Artist = artists.Prepare(),
+                Genre = genres.Prepare(),
+                Album = albums.Prepare(),
+                Year = years.Prepare()
             };
         }
 
@@ -90,7 +100,7 @@ namespace TagEditor.GUI.Models
         {
             if (!string.IsNullOrEmpty(content))
             {
-                albums.SourceItems.Add(content);
+                albums.AddUniqueToItems(content);
             }
         }
 
@@ -122,10 +132,10 @@ namespace TagEditor.GUI.Models
                     result.TrackCount = tags.TrackCount;
                     result.Genre = new MultiInfo<string>(tags.FirstGenre);
 
-                    var art = tags.Pictures.FirstOrDefault(pic => pic.Type == TagLib.PictureType.FrontCover);
+                    var art = tags.Pictures.FirstOrDefault(pic => pic.Type == PictureType.FrontCover);
                     if (art != null)
                     {
-                        await result.AlbumArt.Content.SetNewImage(art.Data.Data, art.MimeType);
+                        result.AlbumArt.Content = await ImageTag.CreateNewImage(art.Data.Data, art.MimeType);
                     }
 
                     return result;

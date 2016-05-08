@@ -5,6 +5,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Media.Imaging;
 using TagEditor.Core.Utility;
+using TagEditor.GUI.Models;
 using TagEditor.GUI.Utility;
 using TagEditor.GUI.ViewModels;
 
@@ -38,7 +39,8 @@ namespace TagEditor.GUI.Commands
                     using (var stream = await file.OpenStreamForReadAsync())
                     {
                         var content = await stream.ReadBytesAsync((int)stream.Length);
-                        await ViewModel.Tag.AlbumArt.Content.SetNewImage(content, MimeTypeMap.GetMimeType(file.FileType));
+                        ViewModel.Tag.AlbumArt.Content =
+                            await ImageTag.CreateNewImage(content, MimeTypeMap.GetMimeType(file.FileType));
                     }
                 }
                 catch (Exception exc)

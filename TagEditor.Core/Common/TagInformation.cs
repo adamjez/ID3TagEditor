@@ -12,7 +12,7 @@ namespace TagEditor.Core.Common
         public StringBasicTag Title { get; set; }
         public NumberTag TrackNumber { get; set; }
         public ImageTag AlbumArt { get; set; }
-
+        public StringBasicTag AlbumArtist { get; set; }
         public TagInformation()
         {
             Title = new StringBasicTag();
@@ -23,6 +23,7 @@ namespace TagEditor.Core.Common
             Genre = new GenreTag();
             TrackNumber = new NumberTag(1);
             AlbumArt = new ImageTag();
+            AlbumArtist = new StringBasicTag();
         }
     }
 }

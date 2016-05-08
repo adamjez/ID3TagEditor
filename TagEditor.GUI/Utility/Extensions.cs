@@ -10,13 +10,18 @@ namespace TagEditor.GUI.Utility
     {
         public static async Task<BitmapImage> ToImage(this byte[] bytes)
         {
-            using (var ms = new MemoryStream(bytes))
+            if (bytes != null && bytes.Length > 0)
             {
-                var image = new BitmapImage();
-                
-                await image.SetSourceAsync(ms.AsRandomAccessStream());
-                return image;
+                using (var ms = new MemoryStream(bytes))
+                {
+                    var image = new BitmapImage();
+
+                    await image.SetSourceAsync(ms.AsRandomAccessStream());
+                    return image;
+                }
             }
+
+            return null;
         }
     }
 }

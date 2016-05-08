@@ -10,5 +10,6 @@
         <converters:DateTimeYearConverter x:Key="DateTimeYearConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Application.Resources>
 </Application>

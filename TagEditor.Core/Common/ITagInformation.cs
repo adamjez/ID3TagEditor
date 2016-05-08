@@ -12,5 +12,7 @@ namespace TagEditor.Core.Common
         StringBasicTag Title { get; }
         NumberTag TrackNumber { get; }
         ImageTag AlbumArt { get; }
+        StringBasicTag AlbumArtist { get; }
+
     }
 }

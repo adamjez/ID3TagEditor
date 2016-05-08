@@ -127,19 +127,28 @@ namespace TagEditor.Tests
         }
 
         [TestMethod]
-        public async Task BenchmarkTest()
+        public async Task RenderAlbumArtistTest()
         {
-            using (var file = new AudioFile(File.Open("AudioFiles/001-adele-hello.mp3", FileMode.Open)))
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
             {
                 var editor = new Core.Common.TagEditor();
 
                 var info = new TagInformation();
-                info.TrackNumber.SetValue(2);
-                info.Title.SetValue("WTF");
-                info.Artist.SetValue("Artist");
 
-
+                info.AlbumArtist.SetValue("Album Artist");
+           
                 await editor.SetTags(file, info, TagType.ID3v2);
+                
+
+            }
+
+            using (var file = new AudioFile(File.Open("AudioFiles/test1.mp3", FileMode.Open)))
+            {
+                var editor = new Core.Common.TagEditor();
+
+                var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
+
+                Assert.AreEqual(newInfo.AlbumArtist.Content, "Album Artist");
             }
         }
 

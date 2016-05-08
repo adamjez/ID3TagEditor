@@ -26,14 +26,16 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel>
+                <StackPanel DataContext="{Binding Tag.AlbumArt}">
                     <TextBlock Text="Album Art" FontSize="30"></TextBlock>
                     <Grid Background="{StaticResource AppBarBackgroundThemeBrush}" Height="256" Width="256"
                           HorizontalAlignment="Left">
-                        <Image Source="{Binding Tag.AlbumArt.Content.Image}"  Stretch="Uniform"/>
+                        <Image Source="{Binding Content.Image}"  Stretch="Uniform"/>
                     </Grid>
                     <Button Content="Load from File" Command="{Binding Path=LoadImageCommand}"  Width="242" Margin="6"/>
                     <Button Content="Remove album art" Command="{Binding Path=RemoveImageCommand}" Width="242" Margin="6"/>
+                    <TextBlock Text="Multiple Album Arts" HorizontalAlignment="Center" Foreground="Red"
+                              Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </StackPanel>
                
             </Grid>
@@ -46,35 +48,74 @@
                 <TextBlock Text="Tag Informations" FontSize="30"/>
                 <StackPanel Grid.Row="1" Margin="6">
                     <TextBox Header="Song Title" Text="{Binding Tag.Title, Mode=TwoWay}" 
-                             Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"></TextBox>
-                    <Grid>
+                             IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Grid DataContext="{Binding Tag.Artist}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox MinWidth="50" IsChecked="{Binding Tag.Artist.IsEdited}"
-                                  Visibility="{Binding Tag.Artist.MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBox Grid.Column="1" Header="Artist" Text="{Binding Tag.Artist.Content, Mode=TwoWay}"
-                                 IsEnabled="{Binding Tag.Artist.IsEdited}"></TextBox>
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" 
+                                  Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBox Grid.Column="1" Header="Artist" Text="{Binding Content, Mode=TwoWay}"
+                                 IsEnabled="{Binding IsEdited}"></TextBox>
                     </Grid>
 
-                    <TextBox Header="Album" Text="{Binding Tag.Album.Content, Mode=TwoWay}"></TextBox>
+                    <Grid DataContext="{Binding Tag.Album}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}"
+                                  Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBox Grid.Column="1" Header="Album" Text="{Binding Content, Mode=TwoWay}"
+                                 IsEnabled="{Binding IsEdited}"></TextBox>
+                    </Grid>
 
-                    <Grid Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}">
+                    <Grid DataContext="{Binding Tag.AlbumArtist}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}"
+                                  Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBox Grid.Column="1" Header="Album" Text="{Binding Content, Mode=TwoWay}"
+                                 IsEnabled="{Binding IsEdited}"></TextBox>
+                    </Grid>
+                    
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <TextBox Header="Track Number" Text="{Binding Tag.TrackNumber, Mode=TwoWay}" 
-                                 InputScope="Number" Margin="0,0,8,0"/>
+                                 InputScope="Number" Margin="0,0,8,0"
+                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
                         <TextBox Grid.Column="1" Header="Track Count" Margin="8,0,0,0"
-                                 Text="{Binding Tag.TrackCount, Mode=TwoWay}" InputScope="Number"/>
+                                 Text="{Binding Tag.TrackCount, Mode=TwoWay}" InputScope="Number"
+                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
                     </Grid>
 
-                    <DatePicker Header="Year" MonthVisible="False" DayVisible="False" 
-                                Date="{Binding Tag.Year.Content, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"/>
-
-                    <TextBox Header="Genre" Text="{Binding Tag.Genre.Content, Mode=TwoWay}"></TextBox>
+                    <Grid DataContext="{Binding Tag.Year}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}"
+                                  Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <DatePicker Date="{Binding Content, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"
+                                    IsEnabled="{Binding IsEdited}" Header="Year" MonthVisible="False" DayVisible="False"
+                                    Grid.Column="1"/>
+                    </Grid>
+                    <Grid DataContext="{Binding Tag.Genre}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}"
+                                  Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBox Grid.Column="1" Header="Genre" Text="{Binding Content, Mode=TwoWay}"
+                                 IsEnabled="{Binding IsEdited}"></TextBox>
+                    </Grid>
                 </StackPanel>
             </Grid>
 
@@ -114,10 +155,13 @@
         </Grid>
         <ProgressRing Grid.Row="1" IsActive="{Binding IsBusy}" Width="100" Height="100"/>
         <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
-            <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand}"/>
-            <AppBarButton Icon="Remove" Label="Remove Tags" Command="{Binding RemoveCommand}"/>
+            <AppBarButton Icon="Save" Label="Save All" Command="{Binding MultipleSaveCommand}"
+                          Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand}"
+                          Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"/>
             <AppBarToggleButton Icon="Play" Label="Play" Command="{Binding PlayCommand}" 
                           Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"/>
+            <AppBarButton Icon="Remove" Label="Remove Tags" Command="{Binding RemoveCommand}"/>
         </CommandBar>
     </Grid>
 </Page>
