@@ -101,10 +101,12 @@
                         </Grid>
                         <TextBox Header="Track Number" Text="{Binding Tag.TrackNumber, Mode=TwoWay}" Grid.Column="1"
                                  InputScope="Number" Margin="16,0,16,0"
-                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
+                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"
+                                 TextAlignment="Center"/>
                         <TextBox Grid.Column="2" Header="Track Count"
                                  Text="{Binding Tag.TrackCount, Mode=TwoWay}" InputScope="Number"
-                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
+                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"
+                                 TextAlignment="Center"/>
                     </Grid>
                     <Grid DataContext="{Binding Tag.Genre}">
                         <Grid.ColumnDefinitions>

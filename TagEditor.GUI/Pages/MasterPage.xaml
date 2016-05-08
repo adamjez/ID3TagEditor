@@ -18,7 +18,7 @@
         </Grid>
         <GridView Grid.Row="1" x:Name="GridView"
                   ItemsSource="{Binding FileItems}" 
-                  SelectionChanged="Selector_OnSelectionChanged" Margin="8">
+                  SelectionChanged="Selector_OnSelectionChanged" Margin="8,8,8,0">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="300">
