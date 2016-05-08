@@ -59,21 +59,19 @@ namespace TagEditor.GUI.Models
             {
                 using (var audioFile = new AudioFile(await file.OpenStreamForReadAsync(), true))
                 {
-                    var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2);
+                    var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2)
+                        ?? new TagInformation();
 
+                    albums.AddUniqueToItems(info.Album.Content);
+                    artists.AddUniqueToItems(info.Artist.Content);
+                    genres.AddUniqueToItems(info.Genre.Type);
+                    albumArtists.AddUniqueToItems(info.AlbumArtist.Content);
+                    years.AddUniqueToItems((uint?)info.Year.Content);
 
-                    albums.AddUniqueToItems(info?.Album.Content);
-                    artists.AddUniqueToItems(info?.Artist.Content);
-                    genres.AddUniqueToItems(info?.Genre.Type);
-                    albumArtists.AddUniqueToItems(info?.AlbumArtist.Content);
-                    years.AddUniqueToItems((uint?)info?.Year.Content);
-
-                    if (info?.AlbumArt.Content != null)
-                    {
-                        var albumArt = await ImageTag.CreateNewImage(info?.AlbumArt.Content, info?.AlbumArt.MimeType);
-                        albumArts.AddUniqueToItems(albumArt,
-                            (tag1, tag2) => tag1.MimeType == tag2.MimeType && tag1.Content.SequenceEqual(tag2.Content));
-                    }
+                    var albumArt = await ImageTag.CreateNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
+                    albumArts.AddUniqueToItems(albumArt,
+                        (tag1, tag2) => tag1.MimeType == tag2.MimeType && tag1.Content.SequenceEqual(tag2.Content));
+                    
                 }
             }
 

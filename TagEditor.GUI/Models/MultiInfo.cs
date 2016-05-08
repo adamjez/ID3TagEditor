@@ -58,7 +58,8 @@ namespace TagEditor.GUI.Models
 
         public void AddUniqueToItems(T item, Func<T, T, Boolean> compare = null)
         {
-            if (sourceItems.All(sourceItem => !(compare?.Invoke(item, sourceItem) ?? sourceItem.Equals(item))))
+            if (sourceItems.All(sourceItem => !(compare?.Invoke(item, sourceItem) 
+                    ?? sourceItem?.Equals(item)) ??  item != null))
             {
                 SourceItems.Add(item);
             }

@@ -54,7 +54,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTapEnabled="False"
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTabStop="False"
                                   Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBox Grid.Column="1" Header="Artist" Text="{Binding Content, Mode=TwoWay}"
                                  IsEnabled="{Binding IsEdited}"></TextBox>
@@ -65,7 +65,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTapEnabled="False"
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTabStop="False"
                                   Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBox Grid.Column="1" Header="Album" Text="{Binding Content, Mode=TwoWay}"
                                  IsEnabled="{Binding IsEdited}"></TextBox>
@@ -76,42 +76,42 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTapEnabled="False"
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTabStop="False"
                                   Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBox Grid.Column="1" Header="Album Artist" Text="{Binding Content, Mode=TwoWay}"
                                  IsEnabled="{Binding IsEdited}"></TextBox>
                     </Grid>
-                    
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Header="Track Number" Text="{Binding Tag.TrackNumber, Mode=TwoWay}" 
-                                 InputScope="Number" Margin="0,0,8,0"
-                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
-                        <TextBox Grid.Column="1" Header="Track Count" Margin="8,0,0,0"
-                                 Text="{Binding Tag.TrackCount, Mode=TwoWay}" InputScope="Number"
-                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
-                    </Grid>
 
-                    <Grid DataContext="{Binding Tag.Year}">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTapEnabled="False"
+                        <Grid DataContext="{Binding Tag.Year}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTabStop="False"
                                   Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <DatePicker Date="{Binding Content, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"
+                            <DatePicker Date="{Binding Content, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"
                                     IsEnabled="{Binding IsEdited}" Header="Year" MonthVisible="False" DayVisible="False"
-                                    Grid.Column="1"/>
+                                    Grid.Column="1" MinWidth="100"/>
+                        </Grid>
+                        <TextBox Header="Track Number" Text="{Binding Tag.TrackNumber, Mode=TwoWay}" Grid.Column="1"
+                                 InputScope="Number" Margin="16,0,16,0"
+                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <TextBox Grid.Column="2" Header="Track Count"
+                                 Text="{Binding Tag.TrackCount, Mode=TwoWay}" InputScope="Number"
+                                 IsEnabled="{Binding MoreFiles, Converter={StaticResource InverseBooleanConverter}}"/>
                     </Grid>
                     <Grid DataContext="{Binding Tag.Genre}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTapEnabled="False"
+                        <CheckBox MinWidth="50" IsChecked="{Binding IsEdited, Mode=TwoWay}" IsTabStop="False"
                                   Visibility="{Binding MultipleContent, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBox Grid.Column="1" Header="Genre" Text="{Binding Content, Mode=TwoWay}"
                                  IsEnabled="{Binding IsEdited}"></TextBox>
