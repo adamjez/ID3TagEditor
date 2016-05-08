@@ -1,15 +1,17 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TagEditor.Core.Common;
 using TagEditor.Core.ID3v1;
+using TagEditor.Core.Utility;
 
 namespace TagEditor.Tests
 {
     [TestClass]
-    public class ID3V2RenderUnitTest
+    public class ID3v2RenderUnitTest
     {
         [TestMethod]
         public async Task RenderArtistTest()
@@ -180,7 +182,14 @@ namespace TagEditor.Tests
 
                 var newInfo = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
-                Assert.IsTrue(newInfo.AlbumArt.Content.Length > 0);
+                var bitmap = new Bitmap("ImageFiles/Adele.png");
+                using (var ms = new MemoryStream())
+                {
+                    var format = ImageFormat.Png;
+                    bitmap.Save(ms, format);
+
+                    Assert.IsTrue(ms.ToArray().SequenceEqual(newInfo.AlbumArt.Content));
+                }
             }
         }
     }

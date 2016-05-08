@@ -56,15 +56,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ID3v1ParserUnitTest.cs" />
-    <Compile Include="ID3V2RenderUnitTest.cs" />
+    <Compile Include="ID3v2RenderUnitTest.cs" />
     <Compile Include="ID3v1RenderUnitTest.cs" />
     <Compile Include="ID3v2ParserUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AudioFiles\001-adele-hello.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="AudioFiles\test.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

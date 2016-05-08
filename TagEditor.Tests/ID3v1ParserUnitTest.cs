@@ -74,5 +74,18 @@ namespace TagEditor.Tests
                 Assert.AreEqual((uint?)12, info.TrackNumber.Content);
             }
         }
+
+        [TestMethod]
+        public async Task AlbumTest()
+        {
+            using (var file = new AudioFile(File.Open("AudioFiles/test.mp3", FileMode.Open)))
+            {
+                var editor = new Core.Common.TagEditor();
+
+                var info = await editor.RetrieveTagsAsync(file, TagType.ID3v1);
+
+                Assert.AreEqual("Albumík", info.Album.Content);
+            }
+        }
     }
 }

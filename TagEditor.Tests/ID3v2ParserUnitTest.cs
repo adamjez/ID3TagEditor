@@ -75,7 +75,7 @@ namespace TagEditor.Tests
         }
 
         [TestMethod]
-        public async Task AlbumArtTest()
+        public async Task AlbumTest()
         {
             using (var file = new AudioFile(File.Open("AudioFiles/test.mp3", FileMode.Open)))
             {
@@ -83,7 +83,20 @@ namespace TagEditor.Tests
 
                 var info = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
 
-                Assert.AreNotEqual(info.AlbumArt, null);
+                Assert.AreEqual(info.Album.Content, "Albumík");
+            }
+        }
+
+        [TestMethod]
+        public async Task AlbumArtistTest()
+        {
+            using (var file = new AudioFile(File.Open("AudioFiles/test.mp3", FileMode.Open)))
+            {
+                var editor = new Core.Common.TagEditor();
+
+                var info = await editor.RetrieveTagsAsync(file, TagType.ID3v2);
+
+                Assert.AreEqual(info.AlbumArtist.Content, "Petr Pán");
             }
         }
     }

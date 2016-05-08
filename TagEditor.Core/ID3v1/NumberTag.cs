@@ -20,7 +20,7 @@ namespace TagEditor.Core.ID3v1
         public override bool Validate(uint val)
         {
             // We need to compute maximal number we can store
-            return (val > 0 && val <= Math.Pow(val, BytesCapacity * 8));
+            return val <= Math.Pow(val, BytesCapacity * 8);
         }
 
         public override byte[] Render(int capacity = -1)

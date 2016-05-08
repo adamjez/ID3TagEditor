@@ -28,7 +28,8 @@ namespace TagEditor.GUI.Models
                         Year = new MultiInfo<uint?>((uint?)info.Year.Content),
                         TrackNumber = info.TrackNumber.Content,
                         TrackCount = info.TrackNumber.TrackCount,
-                        Genre = new MultiInfo<string>(info.Genre.Type)
+                        Genre = new MultiInfo<string>(info.Genre.Type),
+                        AlbumArtist = new MultiInfo<string>(info.AlbumArtist.Content)
                     };
 
                     if (info.AlbumArt.Content != null)
@@ -51,6 +52,7 @@ namespace TagEditor.GUI.Models
             var albums = new MultiInfo<string>();
             var artists = new MultiInfo<string>();
             var genres = new MultiInfo<string>();
+            var albumArtists = new MultiInfo<string>();
             var years = new MultiInfo<uint?>();
             var albumArts = new MultiInfo<ImageTag>();
             foreach (var file in files)
@@ -62,27 +64,12 @@ namespace TagEditor.GUI.Models
                     albums.AddUniqueToItems(info.Album.Content);
                     artists.AddUniqueToItems(info.Artist.Content);
                     genres.AddUniqueToItems(info.Genre.Type);
-
+                    albumArtists.AddUniqueToItems(info.AlbumArtist.Content);
                     years.AddUniqueToItems((uint?)info.Year.Content);
 
                     var albumArt = await ImageTag.CreateNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
                     albumArts.AddUniqueToItems(albumArt,
                         (tag1, tag2) => tag1.MimeType == tag2.MimeType && tag1.Content.SequenceEqual(tag2.Content));
-                    //AddIfNotEmpty(info.Album.Content, albums);
-                    //AddIfNotEmpty(info.Artist.Content, artists);
-                    //AddIfNotEmpty(info.Genre.Type, genres);
-
-                    //if (info.Year.Content != null && info.Year.Content > 0)
-                    //{
-                    //    years.AddUniqueToItems((uint?)info.Year.Content);
-                    //}
-
-                    //if (info.AlbumArt.Content != null)
-                    //{
-                    //    var albumArt = await ImageTag.CreateNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
-                    //    albumArts.AddUniqueToItems(albumArt, 
-                    //        (tag1 ,tag2) => tag1.MimeType == tag2.MimeType && tag1.Content.SequenceEqual(tag2.Content));
-                    //}
                 }
             }
 
@@ -92,7 +79,8 @@ namespace TagEditor.GUI.Models
                 Artist = artists.Prepare(),
                 Genre = genres.Prepare(),
                 Album = albums.Prepare(),
-                Year = years.Prepare()
+                Year = years.Prepare(),
+                AlbumArtist = albumArtists.Prepare()
             };
         }
 
@@ -131,6 +119,7 @@ namespace TagEditor.GUI.Models
                     result.TrackNumber = tags.Track;
                     result.TrackCount = tags.TrackCount;
                     result.Genre = new MultiInfo<string>(tags.FirstGenre);
+                    result.AlbumArtist = new MultiInfo<string>(tags.AlbumArtists.FirstOrDefault());
 
                     var art = tags.Pictures.FirstOrDefault(pic => pic.Type == PictureType.FrontCover);
                     if (art != null)
