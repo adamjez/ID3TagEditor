@@ -62,6 +62,7 @@ namespace TagEditor.Core.ID3v2
                     var frame = await Frame.Frame.Parse(File);
                     currentPosition += frame.Header.FullSize;
 
+
                     FrameTagMaping.Fill(frame.Base, information);
                 }
                 catch (EndOfFramesException)
@@ -105,7 +106,7 @@ namespace TagEditor.Core.ID3v2
             await File.WriteAtBeginningAsync(buffer, replace);
         }
 
-        public override async  Task RemoveTags()
+        public override async Task RemoveTags()
         {
             if (await ParseHeaderAsync())
             {

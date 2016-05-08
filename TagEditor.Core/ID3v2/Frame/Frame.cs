@@ -49,7 +49,15 @@ namespace TagEditor.Core.ID3v2.Frame
                 Debug.WriteLine("Frame header flag is set (FrameHeaderFlags2.GroupingIdentity)");
             }
 
-            frame.Base = FrameResolver.Resolve(frame.Header.FrameID.ToEnum<FrameType>());
+            try
+            {
+                frame.Base = FrameResolver.Resolve(frame.Header.FrameID.ToEnum<FrameType>());
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Unknown frame type with FrameID: " + frame.Header.FrameID);
+                frame.Base = new IgnoreFrame(FrameType.UNKNOWN);
+            }
             frame.Base.Parse(await file.ReadNextAsync(frame.Header.Size));
 
             return frame;

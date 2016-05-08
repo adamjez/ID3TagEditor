@@ -7,20 +7,91 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          Opacity="{Binding IsBusy, Converter={StaticResource BoolToOpacityConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding Filename}"/>
+        <TextBlock Text="{Binding CurrentFileName}" Margin="20" FontSize="40"/>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Album Art" FontSize="30"></TextBlock>
+                    <Grid Background="{StaticResource AppBarBackgroundThemeBrush}" Height="256" Width="256"
+                          HorizontalAlignment="Left">
+                        <Image Source="{Binding Tag.AlbumArt}"  Stretch="Uniform"/>
+                    </Grid>
+                    <Button Content="Load from File" Command="{Binding Path=LoadImageCommand}"  Width="242" Margin="6"/>
+                    <Button Content="Remove album art" Command="{Binding Path=RemoveImageCommand}" Width="242" Margin="6"/>
+                </StackPanel>
+               
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="8" DataContext="{Binding Tag}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Tag Informations" FontSize="30"/>
+                <StackPanel Grid.Row="1" Margin="6">
+                    <TextBox Header="Song Title" Text="{Binding Title, Mode=TwoWay}"></TextBox>
+
+                    <TextBox Header="Artist" Text="{Binding Artist, Mode=TwoWay}"></TextBox>
+
+                    <TextBox Header="Album" Text="{Binding Album, Mode=TwoWay}"></TextBox>
+
+                    <TextBox Header="Track Number" Text="{Binding TrackNumber, Mode=TwoWay}" InputScope="Number"/>
+
+                    <DatePicker Header="Year" MonthVisible="False" DayVisible="False" 
+                                Date="{Binding Year, Converter={StaticResource DateTimeYearConverter}, Mode=TwoWay}"/>
+                    
+                    <TextBox Header="Genre" Text="{Binding Genre, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="2" Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="File Informations" FontSize="30"/>
+                <StackPanel Grid.Row="1" DataContext="{Binding FileInformation}">
+                    <StackPanel Orientation="Horizontal" Margin="6">
+                        <TextBlock Text="File Format: " FontSize="20"/>
+                        <TextBlock Text="{Binding Format}" FontSize="20" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="6">
+                        <TextBlock Text="Size: " FontSize="20"/>
+                        <TextBlock Text="{Binding Size}" FontSize="20" Margin="8,0,2,0"/>
+                        <TextBlock Text="KB " FontSize="20"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="6">
+                        <TextBlock Text="Path: " FontSize="20"/>
+                        <TextBlock Text="{Binding Path}" FontSize="20" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="6">
+                        <TextBlock Text="Modified Date: " FontSize="20"/>
+                        <TextBlock Text="{Binding ModifiedAt}" FontSize="20" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
         <ProgressRing Grid.Row="1" IsActive="{Binding IsBusy}" Width="100" Height="100"/>
+        <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
+            <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand}"/>
+            <AppBarToggleButton Icon="Play" Label="Play" Command="{Binding PlayCommand}" 
+                          Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"/>
+        </CommandBar>
     </Grid>
 </Page>

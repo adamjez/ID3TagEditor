@@ -158,7 +158,6 @@ namespace TagEditor.Core.Common
                 fileStream.Position = writePosition;
                 await WriteAsync(buffer);
                 writePosition += buffer.Length;
-
             }
 
 

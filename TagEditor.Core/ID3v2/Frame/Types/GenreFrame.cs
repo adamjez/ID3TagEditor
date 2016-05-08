@@ -15,6 +15,9 @@ namespace TagEditor.Core.ID3v2.Frame.Types
         {
             base.Parse(bytes);
 
+            if (Content.Length == 0)
+                return;
+
             if (Content[0] == '(')
             {
                 var index = Content.IndexOf(")", StringComparison.Ordinal);

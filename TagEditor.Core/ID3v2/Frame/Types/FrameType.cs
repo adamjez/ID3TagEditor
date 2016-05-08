@@ -75,6 +75,7 @@
         WORS,
         WPAY,
         WPUB,
-        WXXX
+        WXXX,
+        UNKNOWN
     }
 }

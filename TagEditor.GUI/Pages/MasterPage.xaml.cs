@@ -15,11 +15,11 @@ namespace TagEditor.GUI.Pages
     /// </summary>
     public sealed partial class MasterPage : Page
     {
-        private MainViewModel ViewModel;
+        private readonly MainViewModel viewModel;
         public MasterPage()
         {
             this.InitializeComponent();
-            DataContext = ViewModel = new MainViewModel();
+            DataContext = viewModel = new MainViewModel();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -30,7 +30,7 @@ namespace TagEditor.GUI.Pages
                 SystemNavigationManager.GetForCurrentView().BackRequested += MasterPage_BackRequested;
             }
 
-            var path = (string) e.Parameter;
+            var path = (string)e.Parameter;
 
             if (string.IsNullOrEmpty(path))
             {
@@ -38,7 +38,7 @@ namespace TagEditor.GUI.Pages
                 path = library.SaveFolder.Path;
             }
 
-            await ViewModel.LoadItems(path);
+            await viewModel.LoadItems(path);
 
             base.OnNavigatedTo(e);
         }
@@ -54,10 +54,15 @@ namespace TagEditor.GUI.Pages
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedItem = (FolderItem)GridView.SelectedItem;
-            if (selectedItem != null)
+            var selectedFolder = GridView.SelectedItem as FolderItem;
+            var selectedFile = GridView.SelectedItem as FileItem;
+            if (selectedFolder != null)
             {
-                Frame.Navigate(typeof(MasterPage), selectedItem.Folder.Path);
+                Frame.Navigate(typeof(MasterPage), selectedFolder.Folder.Path);
+            }
+            else if (selectedFile != null)
+            {
+                Frame.Navigate(typeof(DetailPage), selectedFile.File.Path);
             }
         }
 

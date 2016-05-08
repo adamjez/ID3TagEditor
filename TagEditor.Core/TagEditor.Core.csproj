@@ -69,6 +69,7 @@
     <Compile Include="ID3v2\Frame\Types\CommentFrame.cs" />
     <Compile Include="ID3v2\Frame\Types\FrameType.cs" />
     <Compile Include="ID3v2\Frame\Types\GenreFrame.cs" />
+    <Compile Include="ID3v2\Frame\Types\IgnoreFrame.cs" />
     <Compile Include="ID3v2\Frame\Types\PictureType.cs" />
     <Compile Include="ID3v2\Frame\Types\TextFrame.cs" />
     <Compile Include="ID3v2\Header.cs" />

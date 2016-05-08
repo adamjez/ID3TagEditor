@@ -18,30 +18,33 @@ namespace TagEditor.Core.ID3v2.Frame.Types
 
         public override void Parse(byte[] bytes)
         {
-            var encoder = GetEncoding(bytes[0]);
+            int pos = 0;
+
+            var encoder = GetEncoding(bytes[pos++]);
 
             // Parsing MIME type
-            var index = bytes.SubArray(1).IndexOf(new byte[] { 0x00 });
+            var offset = bytes.SubArray(pos).IndexOf(new byte[] { 0x00 });
 
-            MimeType = ParseText(bytes.SubArray(1, index));
+            MimeType = ParseText(bytes.SubArray(pos, offset));
 
+            pos = offset + 2;
             if (!MimeType.Contains("image/"))
             {
                 MimeType = "image/" + MimeType;
             }
 
             // Parsing Picture GenreType
-            PictureType = (PictureType)bytes[index + 2];
+            PictureType = (PictureType)bytes[pos++];
 
             // Parsing Description     
-            var buffer = bytes.SubArray(index + 3);
+            var buffer = bytes.SubArray(pos);
 
             var delimiter = encoder.GetDelimiter();
-            index = buffer.IndexOf(delimiter);
+            var index = buffer.IndexOf(delimiter);
 
             Description = encoder.GetString(buffer.SubArray(0, index));
 
-            Image = buffer.SubArray(Description.Length + delimiter.Length);
+            Image = buffer.SubArray(index + delimiter.Length);
         }
 
         public override byte[] Render()

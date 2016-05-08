@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using TagEditor.Core.ID3v2.Frame.Types;
 
 namespace TagEditor.Core.ID3v2.Frame
@@ -25,8 +26,11 @@ namespace TagEditor.Core.ID3v2.Frame
             {
                 return new AttachedPictureFrame();
             }
-
-            throw new NotImplementedException();
+            else //if (type == FrameType.PRIV || type == FrameType.MCDI || type == FrameType.WXXX || type == FrameType.USLT)
+            {
+                Debug.WriteLine("Missing FrameType: " + type);
+                return new IgnoreFrame(FrameType.PRIV);
+            }
         }
     }
 }

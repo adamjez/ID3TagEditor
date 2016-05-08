@@ -71,7 +71,7 @@ namespace TagEditor.Core.Utility
 
         public static byte[] GetDelimiter(this Encoding encoding)
         {
-            if (encoding.CodePage == 1252)
+            if (encoding.CodePage == 1252 || encoding.WebName == "iso-8859-1")
             {
                 return new byte[] { 0x00 };
             }
@@ -96,7 +96,14 @@ namespace TagEditor.Core.Utility
         public static Encoding GetDefaultEncodingV1()
         {
             // Encoding 1252 is not supported on UWP 
-            return Encoding.GetEncoding(1252) ?? Encoding.GetEncoding("latin1");
+            try
+            {
+                return Encoding.GetEncoding(1252);
+            }
+            catch (Exception)
+            {
+                return Encoding.GetEncoding("latin1");
+            }
         }
 
 
