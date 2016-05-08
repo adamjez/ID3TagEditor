@@ -1,34 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using TagEditor.GUI.ViewModels;
 
 namespace TagEditor.GUI.Models
 {
     public class MultiInfo<T> : NotificationBase
     {
-        private bool multipleContent;
         private T content;
         private ObservableCollection<T> sourceItems;
         private bool isEdited;
 
         public MultiInfo(T item)
+            : this()
         {
-            MultipleContent = false;
             Content = item;
             IsEdited = true;
         }
 
         public MultiInfo(IEnumerable<T> items)
         {
-            MultipleContent = true;
             SourceItems = new ObservableCollection<T>(items);
         }
 
-        public bool MultipleContent
+        public MultiInfo()
         {
-            get { return multipleContent; }
-            set { SetProperty(ref multipleContent, value); }
+            SourceItems = new ObservableCollection<T>();
         }
+
+        public bool MultipleContent => SourceItems.Count > 1;
 
         public bool IsEdited
         {
@@ -46,6 +46,14 @@ namespace TagEditor.GUI.Models
         {
             get { return sourceItems; }
             private set { SetProperty(ref sourceItems, value); }
+        }
+
+        public void AddUniqueToItems(T item)
+        {
+            if (sourceItems.All(sourceItem => !sourceItem.Equals(item)))
+            {
+                SourceItems.Add(item);
+            }
         }
     }
 }

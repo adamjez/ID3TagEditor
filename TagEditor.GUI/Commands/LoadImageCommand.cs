@@ -38,15 +38,13 @@ namespace TagEditor.GUI.Commands
                     using (var stream = await file.OpenStreamForReadAsync())
                     {
                         var content = await stream.ReadBytesAsync((int)stream.Length);
-                        await ViewModel.Tag.SetNewImage(content, MimeTypeMap.GetMimeType(file.FileType));
+                        await ViewModel.Tag.AlbumArt.Content.SetNewImage(content, MimeTypeMap.GetMimeType(file.FileType));
                     }
                 }
                 catch (Exception exc)
                 {
                     Debug.WriteLine("Couldn't open given file: " + exc.Message);
-                    return;
                 }
-
             }
         }
     }

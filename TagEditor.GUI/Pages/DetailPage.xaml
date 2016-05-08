@@ -30,7 +30,7 @@
                     <TextBlock Text="Album Art" FontSize="30"></TextBlock>
                     <Grid Background="{StaticResource AppBarBackgroundThemeBrush}" Height="256" Width="256"
                           HorizontalAlignment="Left">
-                        <Image Source="{Binding Tag.AlbumArt.Content}"  Stretch="Uniform"/>
+                        <Image Source="{Binding Tag.AlbumArt.Content.Image}"  Stretch="Uniform"/>
                     </Grid>
                     <Button Content="Load from File" Command="{Binding Path=LoadImageCommand}"  Width="242" Margin="6"/>
                     <Button Content="Remove album art" Command="{Binding Path=RemoveImageCommand}" Width="242" Margin="6"/>
@@ -47,7 +47,6 @@
                 <StackPanel Grid.Row="1" Margin="6">
                     <TextBox Header="Song Title" Text="{Binding Tag.Title, Mode=TwoWay}" 
                              Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"></TextBox>
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -116,6 +115,7 @@
         <ProgressRing Grid.Row="1" IsActive="{Binding IsBusy}" Width="100" Height="100"/>
         <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
             <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand}"/>
+            <AppBarButton Icon="Remove" Label="Remove Tags" Command="{Binding RemoveCommand}"/>
             <AppBarToggleButton Icon="Play" Label="Play" Command="{Binding PlayCommand}" 
                           Visibility="{Binding MoreFiles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=I}"/>
         </CommandBar>

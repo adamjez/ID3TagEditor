@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +33,8 @@ namespace TagEditor.GUI.Models
 
                     if (info.AlbumArt.Content != null)
                     {
-                        await tag.SetNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
+                        tag.AlbumArt.Content = new ImageTag();
+                        await tag.AlbumArt.Content.SetNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
                     }
 
                     return tag;
@@ -40,6 +42,56 @@ namespace TagEditor.GUI.Models
             }
 
             return new TagViewModel();
+        }
+
+        public static async Task<TagViewModel> LoadFromFiles(IEnumerable<StorageFile> files)
+        {
+            var editor = new Core.Common.TagEditor();
+
+            var albums = new MultiInfo<string>();
+            var artists = new MultiInfo<string>();
+            var genres = new MultiInfo<string>();
+            var years = new MultiInfo<uint?>();
+            var albumArts = new MultiInfo<ImageTag>();
+            foreach (var file in files)
+            {
+                using (var audioFile = new AudioFile(await file.OpenStreamForReadAsync(), true))
+                {
+                    var info = await editor.RetrieveTagsAsync(audioFile, TagType.ID3v2);
+
+                    AddIfNotEmpty(info.Album.Content, albums);
+                    AddIfNotEmpty(info.Artist.Content, artists);
+                    AddIfNotEmpty(info.Genre.Type, genres);
+
+                    if (info.Year.Content != null && info.Year.Content > 0)
+                    {
+                        years.SourceItems.Add((uint?)info.Year.Content);
+                    }
+
+                    if (info.AlbumArt.Content != null)
+                    {
+                        var albumArt = new ImageTag();
+                        await albumArt.SetNewImage(info.AlbumArt.Content, info.AlbumArt.MimeType);
+                        albumArts.SourceItems.Add(albumArt);
+                    }
+                }
+            }
+
+            return new TagViewModel
+            {
+                AlbumArt = albumArts,
+                Artist = artists,
+                Genre = genres,
+                Year = years
+            };
+        }
+
+        private static void AddIfNotEmpty(string content, MultiInfo<string> albums)
+        {
+            if (!string.IsNullOrEmpty(content))
+            {
+                albums.SourceItems.Add(content);
+            }
         }
 
         public static async Task<TagViewModel> LoadOthers(StorageFile file)
@@ -73,7 +125,7 @@ namespace TagEditor.GUI.Models
                     var art = tags.Pictures.FirstOrDefault(pic => pic.Type == TagLib.PictureType.FrontCover);
                     if (art != null)
                     {
-                        await result.SetNewImage(art.Data.Data, art.MimeType);
+                        await result.AlbumArt.Content.SetNewImage(art.Data.Data, art.MimeType);
                     }
 
                     return result;

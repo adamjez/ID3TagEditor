@@ -11,7 +11,6 @@ using File = System.IO.File;
 
 namespace TagEditor.GUI.Commands
 {
-
     public class SaveCommand : BaseCommand<DetailViewModel>
     {
         public SaveCommand(DetailViewModel viewModel)
@@ -29,29 +28,25 @@ namespace TagEditor.GUI.Commands
 
             if (file.FileType == ".mp3")
             {
-                await Task.Run(async () =>
+                using (var fs = await file.OpenStreamForWriteAsync())
                 {
-                    using (var fs = File.Open(ViewModel.Paths.First(), FileMode.Open))
+                    using (var audioFile = new AudioFile(fs))
                     {
-                        using (var audioFile = new AudioFile(fs))
-                        {
-                            var editor = new Core.Common.TagEditor();
+                        var editor = new Core.Common.TagEditor();
 
-                            var information = ViewModel.Tag.ToTagInformation();
+                        var information = ViewModel.Tag.ToTagInformation();
 
-                            await editor.SetTags(audioFile, information, TagType.ID3v2);
-                            await editor.SetTags(audioFile, information, TagType.ID3v1);
-                        }
+                        await editor.SetTags(audioFile, information, TagType.ID3v2);
+                        await editor.SetTags(audioFile, information, TagType.ID3v1);
                     }
-                });
-               
+                }
             }
             else
             {
 
                 using (var fs = await file.OpenStreamForWriteAsync())
                 {
-                    var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fs,fs));
+                    var tagFile = TagLib.File.Create(new StreamFileAbstraction(file.Name, fs, fs));
 
                     ViewModel.Tag.ToTag(tagFile.Tag);
 

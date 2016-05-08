@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
@@ -51,11 +53,18 @@ namespace TagEditor.GUI.ViewModels
             else
             {
                 CurrentFileName = "Multiple files selected";
+                ICollection<StorageFile> files = new List<StorageFile>();
                 foreach (var path in paths)
                 {
                     var currentFile = await StorageFile.GetFileFromPathAsync(path);
 
+                    files.Add(currentFile);
                     fileInformations.Add(await FileInformation.Load(currentFile));
+                }
+
+                if (files.All(file => file.FileType == ".mp3"))
+                {
+                    Tag = await TagCreator.LoadFromFiles(files);
                 }
             }
 
@@ -66,6 +75,7 @@ namespace TagEditor.GUI.ViewModels
         public ICommand LoadImageCommand { get; private set; }
         public ICommand PlayCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
+        public ICommand RemoveCommand { get; private set; }
 
         public string[] Paths { get; set; }
 

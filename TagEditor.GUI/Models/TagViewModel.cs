@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 using TagEditor.Core.Common;
-using TagEditor.GUI.Utility;
 using TagEditor.GUI.ViewModels;
 using TagLib;
 using File = TagLib.File;
@@ -18,11 +16,14 @@ namespace TagEditor.GUI.Models
         private MultiInfo<string> album;
         private MultiInfo<uint?> year;
         private uint trackNumber;
-        private MultiInfo<BitmapImage> albumArt;
+        private MultiInfo<ImageTag> albumArt;
         private MultiInfo<string> genre;
-        private byte[] albumArtContent;
-        private string mimeType;
         private uint trackCount;
+
+        public TagViewModel()
+        {
+            AlbumArt = new MultiInfo<ImageTag>();
+        }
 
         public void ToTag(Tag tag)
         {
@@ -38,9 +39,9 @@ namespace TagEditor.GUI.Models
             {
                 IPicture newArt = new Picture(
                     ByteVector.FromStream(
-                        new MemoryStream(albumArtContent)));
+                        new MemoryStream(albumArt.Content.Content)));
                 newArt.Type = (TagLib.PictureType)PictureType.FrontCover;
-                newArt.MimeType = mimeType;
+                newArt.MimeType = albumArt.Content.MimeType;
                 // IPicture newArt = this.Picture;
                 tag.Pictures = new [] { newArt };
             }
@@ -81,20 +82,13 @@ namespace TagEditor.GUI.Models
             if (AlbumArt != null)
             {
                 info.AlbumArt.Type = PictureType.FrontCover;
-                info.AlbumArt.MimeType = mimeType;
-                info.AlbumArt.SetValue(albumArtContent);
+                info.AlbumArt.MimeType = albumArt.Content.MimeType;
+                info.AlbumArt.SetValue(albumArt.Content.Content);
             }
 
             return info;
         }
 
-
-        public async Task SetNewImage(byte[] content, string mimeType)
-        {
-            albumArtContent = content;
-            this.mimeType = mimeType;
-            AlbumArt = new MultiInfo<BitmapImage>(await content.ToImage());
-        }
 
         public MultiInfo<string> Artist
         {
@@ -132,7 +126,7 @@ namespace TagEditor.GUI.Models
             set { SetProperty(ref trackCount, value); }
         }
 
-        public MultiInfo<BitmapImage> AlbumArt
+        public MultiInfo<ImageTag> AlbumArt
         {
             get { return albumArt; }
             set { SetProperty(ref albumArt, value); }
